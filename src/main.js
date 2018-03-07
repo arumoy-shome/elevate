@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import Boot from './states/Boot';
 import Splash from './states/Splash';
 import MainMenu from './states/MainMenu';
-// import Game from './states/Game';
+import CandyCatch from './states/CandyCatch';
 
 import config from './config';
 
@@ -16,7 +16,7 @@ class Game extends Phaser.Game {
         this.state.add('Boot', Boot, false);
         this.state.add('Splash', Splash, false);
         this.state.add('MainMenu', MainMenu, false);
-        // this.state.add('Game', GameState, false);
+        this.state.add('CandyCatch', CandyCatch, false);
 
         // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
         if (!window.cordova) {

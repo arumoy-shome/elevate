@@ -10,4 +10,8 @@ export default class extends Phaser.State {
 
         this.add.button(config.gameWidth-401-10, config.gameHeight-143-10, 'button-start', this.startGame, this, 1, 0, 2);
     }
+    
+    startGame() {
+        this.state.start('CandyCatch');
+    }
 }
