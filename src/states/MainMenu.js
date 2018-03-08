@@ -4,6 +4,7 @@ import config from '../config';
 export default class extends Phaser.State {
     preload() {
         this.load.image('background', 'assets/images/candy-catch/background.png');
+        this.load.image('title', 'assets/images/candy-catch/title.png');
         this.load.image('monster-cover', 'assets/images/candy-catch/monster-cover.png');
 		this.load.spritesheet('button-start', 'assets/images/candy-catch/button-start.png', 401, 143);
     }

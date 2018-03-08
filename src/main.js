@@ -14,7 +14,6 @@ class Game extends Phaser.Game {
         super(config.gameWidth, config.gameHeight, Phaser.CANVAS, 'content', null);
 
         this.state.add('Boot', Boot, false);
-        this.state.add('Splash', Splash, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('CandyCatch', CandyCatch, false);
         
