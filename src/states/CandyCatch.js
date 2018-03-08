@@ -12,6 +12,15 @@ export default class extends Phaser.State {
         this._health = 0;
     }
     
+    preload() {
+        this.load.image('floor', 'assets/images/candy-catch/floor.png');
+        this.load.image('title', 'assets/images/candy-catch/title.png');
+        this.load.image('game-over', 'assets/images/candy-catch/gameover.png');
+        this.load.image('score-bg', 'assets/images/candy-catch/score-bg.png');
+        this.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
+        this.load.spritesheet('monster-idle', 'assets/images/candy-catch/monster-idle.png', 103, 131);
+    }
+
     create () {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 200;
