@@ -9,7 +9,6 @@ export default class extends Phaser.State {
         this._fontStyle = null;
         // define Candy variables to reuse them in Candy.item functions
         this._scoreText = null;
-        this._score = 0;
         this._health = 0;
     }
     
@@ -75,8 +74,8 @@ export default class extends Phaser.State {
         candy.inputEnabled = true;
         candy.events.onInputDown.add(() => {
             candy.kill();
-            this._score += 1;
-            this._scoreText.setText(this._score);
+            this.game.score += 1;
+            this._scoreText.setText(this.game.score);
         });
 
         candy.checkWorldBounds = true;

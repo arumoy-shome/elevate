@@ -17,6 +17,8 @@ class Game extends Phaser.Game {
         this.state.add('Splash', Splash, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('CandyCatch', CandyCatch, false);
+        
+        this.score = 0;
 
         // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
         if (!window.cordova) {
