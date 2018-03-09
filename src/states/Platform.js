@@ -65,6 +65,8 @@ export default class extends Phaser.State {
         data.coins.forEach((coin) => {
             let sprite = this.coins.create(coin.x, coin.y, 'coin');
             sprite.anchor.set(0.5, 0.5);
+            this.game.physics.enable(sprite);
+            sprite.body.allowGravity = false;
             sprite.animations.add('rotate', [0, 1, 2, 1], 6, true);
             sprite.animations.play('rotate');
         });
@@ -90,6 +92,9 @@ export default class extends Phaser.State {
 
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
+        this.game.physics.arcade.overlap(this.hero, this.coins, (hero, coin) => {
+            coin.kill();
+        });
     }
 }
 
