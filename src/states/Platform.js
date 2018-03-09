@@ -20,7 +20,7 @@ export default class extends Phaser.State {
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
         this.game.load.image('hero', 'assets/images/platform/hero_stopped.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
-        this.game.load.spritesheet('coin', 'assets/images/platform/coin.png', 22, 22);
+        this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
         this.game.load.json('level1','data/platform/level01.json');
     }
 
@@ -39,6 +39,7 @@ export default class extends Phaser.State {
 
     _loadLevel(data) {
         this._spawnPlatforms(data);
+        this._spawnCoins(data);
 
         this.hero = new Hero(this.game, data.hero.x, data.hero.y);
         this.game.add.existing(this.hero);
@@ -58,6 +59,15 @@ export default class extends Phaser.State {
         });
     }
 
+    _spawnCoins(data) {
+        this.coins = this.game.add.group();
+
+        data.coins.forEach((coin) => {
+            let sprite = this.coins.create(coin.x, coin.y, 'coin');
+            sprite.anchor.set(0.5, 0.5);
+        });
+    }
+
     _handleInput() {
         if(this.keys.left.isDown) {
             this.hero.move(-1);
@@ -69,7 +79,7 @@ export default class extends Phaser.State {
 
         this.keys.up.onDown.add(() => {
             let didJump = this.hero.jump();
-            
+
             if(didJump) {
                 this.sfx.jump.play();
             }
@@ -97,7 +107,7 @@ class Hero extends Phaser.Sprite {
     jump() {
         const JUMP_SPEED = 600;
         let canJump = this.body.touching.down;
-        
+
         if(canJump) {
             this.body.velocity.y = -JUMP_SPEED;
         }
