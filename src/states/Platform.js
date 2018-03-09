@@ -135,7 +135,7 @@ export default class extends Phaser.State {
             if(hero.body.velocity.y > 0) {
                 this.sfx.stomp.play();
                 hero.bounce();
-                spider.kill();
+                spider.die();
             } else {
                 this.sfx.stomp.play();
                 this.game.state.restart();
@@ -193,5 +193,12 @@ class Spider extends Phaser.Sprite {
         } else if(this.body.touching.left || this.body.blocked.left) {
             this.body.velocity.x = this.SPEED;
         }
+    }
+
+    die() {
+        this.body.enable = false;
+        this.animations.play('die').onComplete.addOnce(() => {
+            this.kill();
+        });
     }
 }
