@@ -45,6 +45,8 @@ export default class extends Phaser.State {
             this.hero.move(-1);
         } else if(this.keys.right.isDown) {
             this.hero.move(1);
+        } else {
+            this.hero.move(0);
         }
     }
 }
@@ -53,9 +55,11 @@ class Hero extends Phaser.Sprite {
     constructor(game, x, y) {
         super(game, x, y, 'hero');
         this.anchor.set(0.5, 0.5);
+        this.game.physics.enable(this);
     }
 
     move(direction) {
-        this.x += direction * 2.5
+        const SPEED = 200;
+        this.body.velocity.x = direction * SPEED;
     }
 }
