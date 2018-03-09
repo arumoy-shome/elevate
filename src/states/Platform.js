@@ -132,8 +132,13 @@ export default class extends Phaser.State {
             coin.kill();
         });
         this.game.physics.arcade.overlap(this.hero, this.spiders, (hero, spider) => {
-            this.sfx.stomp.play();
-            this.game.state.restart();
+            if(hero.body.velocity.y > 0) {
+                this.sfx.stomp.play();
+                spider.kill();
+            } else {
+                this.sfx.stomp.play();
+                this.game.state.restart();
+            }
         });
     }
 }
