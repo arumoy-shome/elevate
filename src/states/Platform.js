@@ -134,6 +134,7 @@ export default class extends Phaser.State {
         this.game.physics.arcade.overlap(this.hero, this.spiders, (hero, spider) => {
             if(hero.body.velocity.y > 0) {
                 this.sfx.stomp.play();
+                hero.bounce();
                 spider.kill();
             } else {
                 this.sfx.stomp.play();
@@ -165,6 +166,11 @@ class Hero extends Phaser.Sprite {
         }
 
         return canJump;
+    }
+
+    bounce() {
+        const BOUNCE_SPEED = 200;
+        this.body.velocity.y = -BOUNCE_SPEED;
     }
 }
 
