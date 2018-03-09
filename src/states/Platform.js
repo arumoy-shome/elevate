@@ -20,6 +20,7 @@ export default class extends Phaser.State {
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
         this.game.load.image('hero', 'assets/images/platform/hero_stopped.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
+        this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
         this.game.load.json('level1','data/platform/level01.json');
     }
@@ -27,7 +28,8 @@ export default class extends Phaser.State {
     create() {
         this.add.image(0, 0, 'background');
         this.sfx = {
-            jump: this.game.add.audio('sfxJump')
+            jump: this.game.add.audio('sfxJump'),
+            coin: this.game.add.audio('sfxCoin')
         };
         this._loadLevel(this.cache.getJSON('level1'));
     }
@@ -93,6 +95,7 @@ export default class extends Phaser.State {
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
         this.game.physics.arcade.overlap(this.hero, this.coins, (hero, coin) => {
+            this.sfx.coin.play();
             coin.kill();
         });
     }
