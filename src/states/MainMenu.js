@@ -18,6 +18,6 @@ export default class extends Phaser.State {
     }
     
     startGame() {
-        this.state.start('CandyCatch');
+        this.state.start('Platform');
     }
 }

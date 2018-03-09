@@ -3,8 +3,8 @@ import 'p2';
 import Phaser from 'phaser';
 
 import Boot from './states/Boot';
-import Splash from './states/Splash';
 import MainMenu from './states/MainMenu';
+import Platform from './states/Platform';
 import CandyCatch from './states/CandyCatch';
 
 import config from './config';
