@@ -61,12 +61,12 @@ export default class extends Phaser.State {
             this.game.physics.enable(sprite);
             sprite.body.allowGravity = false;
             sprite.body.immovable = true;
-            
+
             this._spawnInvisibleWalls(platform.x, platform.y, 'left');
             this._spawnInvisibleWalls(platform.x + sprite.width, platform.y, 'right');
         });
     }
-    
+
     _spawnInvisibleWalls(x, y, side) {
         let sprite = this.invisibleWalls.create(x, y, 'invisibleWall');
         sprite.anchor.set(side === 'left' ? 1 : 0, 1);
@@ -123,6 +123,7 @@ export default class extends Phaser.State {
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
         this.game.physics.arcade.collide(this.spiders, this.platforms);
+        this.game.physics.arcade.collide(this.spiders, this.invisibleWalls);
         this.game.physics.arcade.overlap(this.hero, this.coins, (hero, coin) => {
             this.sfx.coin.play();
             coin.kill();
