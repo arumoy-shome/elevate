@@ -2,6 +2,14 @@ import Phaser from 'phaser';
 import config from '../config';
 
 export default class extends Phaser.State {
+    init() {
+        this.keys = this.input.keyboard.addKeys({
+            left: Phaser.KeyCode.LEFT,
+            right: Phaser.KeyCode.RIGHT
+        });
+        console.log(this);
+    }
+
     preload() {
         this.load.image('background', 'assets/images/platform/background.png');
         this.load.image('ground', 'assets/images/platform/ground.png');
@@ -19,14 +27,25 @@ export default class extends Phaser.State {
         this._loadLevel(this.cache.getJSON('level1'));
     }
 
+    update() {
+        this._handleInput();
+    }
+
     _loadLevel(data) {
         data.platforms.forEach((platform) => {
             this.add.sprite(platform.x, platform.y, platform.image);
         });
 
-        let hero = new Hero(this.game, data.hero.x, data.hero.y);
-        this.game.add.existing(hero);
-        console.log(this);
+        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
+        this.game.add.existing(this.hero);
+    }
+
+    _handleInput() {
+        if(this.keys.left.isDown) {
+            this.hero.move(-1);
+        } else if(this.keys.right.isDown) {
+            this.hero.move(1);
+        }
     }
 }
 
@@ -34,5 +53,9 @@ class Hero extends Phaser.Sprite {
     constructor(game, x, y) {
         super(game, x, y, 'hero');
         this.anchor.set(0.5, 0.5);
+    }
+
+    move(direction) {
+        this.x += direction * 2.5
     }
 }
