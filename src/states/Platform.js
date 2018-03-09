@@ -7,7 +7,6 @@ export default class extends Phaser.State {
             left: Phaser.KeyCode.LEFT,
             right: Phaser.KeyCode.RIGHT
         });
-        console.log(this);
     }
 
     preload() {
@@ -38,6 +37,9 @@ export default class extends Phaser.State {
 
         this.hero = new Hero(this.game, data.hero.x, data.hero.y);
         this.game.add.existing(this.hero);
+
+        const GRAVITY = 1200;
+        this.game.physics.arcade.gravity.y = GRAVITY;
     }
 
     _handleInput() {
