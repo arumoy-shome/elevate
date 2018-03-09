@@ -108,6 +108,7 @@ export default class extends Phaser.State {
 
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
+        this.game.physics.arcade.collide(this.spiders, this.platforms);
         this.game.physics.arcade.overlap(this.hero, this.coins, (hero, coin) => {
             this.sfx.coin.play();
             coin.kill();
