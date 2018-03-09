@@ -27,19 +27,29 @@ export default class extends Phaser.State {
     }
 
     update() {
+        this._handleCollisions();
         this._handleInput();
     }
 
     _loadLevel(data) {
-        data.platforms.forEach((platform) => {
-            this.add.sprite(platform.x, platform.y, platform.image);
-        });
+        this._spawnPlatforms(data);
 
         this.hero = new Hero(this.game, data.hero.x, data.hero.y);
         this.game.add.existing(this.hero);
 
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
+    }
+    
+    _spawnPlatforms(data) {
+        this.platforms = this.game.add.group();
+
+        data.platforms.forEach((platform) => {
+            let sprite = this.platforms.create(platform.x, platform.y, platform.image);
+            this.game.physics.enable(sprite);
+            sprite.body.allowGravity = false;
+            sprite.body.immovable = true;
+        });
     }
 
     _handleInput() {
@@ -50,6 +60,10 @@ export default class extends Phaser.State {
         } else {
             this.hero.move(0);
         }
+    }
+    
+    _handleCollisions() {
+        this.game.physics.arcade.collide(this.hero, this.platforms);
     }
 }
 
