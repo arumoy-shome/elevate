@@ -55,6 +55,7 @@ export default class extends Phaser.State {
     _spawnPlatforms(data) {
         this.platforms = this.game.add.group();
         this.invisibleWalls = this.game.add.group();
+        this.invisibleWalls.visible = false;
 
         data.platforms.forEach((platform) => {
             let sprite = this.platforms.create(platform.x, platform.y, platform.image);
