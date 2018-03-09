@@ -19,6 +19,7 @@ export default class extends Phaser.State {
         this.game.load.image('grass2x1', 'assets/images/platform/grass_2x1.png');
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
         this.game.load.image('hero', 'assets/images/platform/hero_stopped.png');
+        this.game.load.image('invisibleWall', 'assets/images/platform/invisible_wall.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
@@ -45,6 +46,7 @@ export default class extends Phaser.State {
         this._spawnCoins(data);
         this._spawnHero(data);
         this._spawnSpiders(data);
+        this._spawnInvisibleWalls(data);
 
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
@@ -52,13 +54,25 @@ export default class extends Phaser.State {
 
     _spawnPlatforms(data) {
         this.platforms = this.game.add.group();
+        this.invisibleWalls = this.game.add.group();
 
         data.platforms.forEach((platform) => {
             let sprite = this.platforms.create(platform.x, platform.y, platform.image);
             this.game.physics.enable(sprite);
             sprite.body.allowGravity = false;
             sprite.body.immovable = true;
+            
+            this._spawnInvisibleWalls(platform.x, platform.y, 'left');
+            this._spawnInvisibleWalls(platform.x + sprite.width, platform.y, 'right');
         });
+    }
+    
+    _spawnInvisibleWalls(x, y, side) {
+        let sprite = this.invisibleWalls.create(x, y, 'invisibleWall');
+        sprite.anchor.set(side === 'left' ? 1 : 0, 1);
+        this.game.physics.enable(sprite);
+        sprite.body.allowGravity = false;
+        sprite.body.immovable = true;
     }
 
     _spawnCoins(data) {
@@ -73,7 +87,7 @@ export default class extends Phaser.State {
             sprite.animations.play('rotate');
         });
     }
-    
+
     _spawnHero(data) {
         this.hero = new Hero(this.game, data.hero.x, data.hero.y);
         this.game.add.existing(this.hero);
@@ -81,7 +95,7 @@ export default class extends Phaser.State {
 
     _spawnSpiders(data) {
         this.spiders = this.game.add.group();
-        
+
         data.spiders.forEach((spider) => {
             let sprite = new Spider(this.game, spider.x, spider.y);
             this.spiders.add(sprite);
