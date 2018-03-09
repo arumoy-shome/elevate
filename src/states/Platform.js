@@ -25,6 +25,9 @@ export default class extends Phaser.State {
 
     create() {
         this.add.image(0, 0, 'background');
+        this.sfx = {
+            jump: this.game.add.audio('sfxJump')
+        };
         this._loadLevel(this.cache.getJSON('level1'));
     }
 
@@ -64,7 +67,11 @@ export default class extends Phaser.State {
         }
 
         this.keys.up.onDown.add(() => {
-            this.hero.jump();
+            let didJump = this.hero.jump();
+            
+            if(didJump) {
+                this.sfx.jump.play();
+            }
         });
     }
 
@@ -93,5 +100,7 @@ class Hero extends Phaser.Sprite {
         if(canJump) {
             this.body.velocity.y = -JUMP_SPEED;
         }
+
+        return canJump;
     }
 }
