@@ -11,10 +11,11 @@ import config from './config';
 
 class Game extends Phaser.Game {
     constructor () {
-        super(config.gameWidth, config.gameHeight, Phaser.CANVAS, 'content', null);
+        super(config.default.width, config.default.height, Phaser.CANVAS, 'content', null);
 
         this.state.add('Boot', Boot, false);
         this.state.add('MainMenu', MainMenu, false);
+        this.state.add('Platform', Platform, false);
         this.state.add('CandyCatch', CandyCatch, false);
         
         this.score = 0;
