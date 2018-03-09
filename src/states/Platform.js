@@ -22,6 +22,7 @@ export default class extends Phaser.State {
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
+        this.game.load.spritesheet('spider', 'assets/images/platform/spider.png', 42, 32);
         this.game.load.json('level1','data/platform/level01.json');
     }
 
