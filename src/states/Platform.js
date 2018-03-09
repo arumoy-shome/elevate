@@ -87,6 +87,10 @@ class Hero extends Phaser.Sprite {
 
     jump() {
         const JUMP_SPEED = 600;
-        this.body.velocity.y = -JUMP_SPEED;
+        let canJump = this.body.touching.down;
+        
+        if(canJump) {
+            this.body.velocity.y = -JUMP_SPEED;
+        }
     }
 }
