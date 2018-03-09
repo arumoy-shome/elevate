@@ -43,9 +43,7 @@ export default class extends Phaser.State {
     _loadLevel(data) {
         this._spawnPlatforms(data);
         this._spawnCoins(data);
-
-        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
-        this.game.add.existing(this.hero);
+        this._spawnHero(data);
 
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
@@ -73,6 +71,11 @@ export default class extends Phaser.State {
             sprite.animations.add('rotate', [0, 1, 2, 1], 6, true);
             sprite.animations.play('rotate');
         });
+    }
+    
+    _spawnHero(data) {
+        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
+        this.game.add.existing(this.hero);
     }
 
     _handleInput() {
