@@ -5,7 +5,8 @@ export default class extends Phaser.State {
     init() {
         this.keys = this.input.keyboard.addKeys({
             left: Phaser.KeyCode.LEFT,
-            right: Phaser.KeyCode.RIGHT
+            right: Phaser.KeyCode.RIGHT,
+            up: Phaser.KeyCode.UP
         });
     }
 
@@ -40,7 +41,7 @@ export default class extends Phaser.State {
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
     }
-    
+
     _spawnPlatforms(data) {
         this.platforms = this.game.add.group();
 
@@ -60,8 +61,12 @@ export default class extends Phaser.State {
         } else {
             this.hero.move(0);
         }
+
+        this.keys.up.onDown.add(() => {
+            this.hero.jump();
+        });
     }
-    
+
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
     }
@@ -78,5 +83,10 @@ class Hero extends Phaser.Sprite {
     move(direction) {
         const SPEED = 200;
         this.body.velocity.x = direction * SPEED;
+    }
+
+    jump() {
+        const JUMP_SPEED = 600;
+        this.body.velocity.y = -JUMP_SPEED;
     }
 }
