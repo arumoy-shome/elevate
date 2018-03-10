@@ -35,7 +35,7 @@ export default class extends Phaser.State {
     }
 
     create() {
-        this.add.image(0, 0, 'background');
+        this.game.add.image(0, 0, 'background');
         this.sfx = {
             jump: this.game.add.audio('sfxJump'),
             coin: this.game.add.audio('sfxCoin'),
@@ -171,7 +171,7 @@ export default class extends Phaser.State {
         });
         this.game.physics.arcade.overlap(this.hero, this.door, (hero, door) => {
             this.sfx.door.play();
-            this.game.state.restart();
+            this.game.state.start('CandyCatch');
         }, (hero, door) => {
             return this.hasKey && hero.body.touching.down;
         });
