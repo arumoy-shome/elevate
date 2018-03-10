@@ -20,6 +20,7 @@ export default class extends Phaser.State {
         this.game.load.image('grass2x1', 'assets/images/platform/grass_2x1.png');
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
         this.game.load.image('invisibleWall', 'assets/images/platform/invisible_wall.png');
+        this.game.load.image('key', 'assets/images/platform/key.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.audio('sfxStomp', 'assets/sounds/platform/stomp.wav');
@@ -63,6 +64,11 @@ export default class extends Phaser.State {
         this.door.anchor.setTo(0.5, 1);
         this.game.physics.enable(this.door);
         this.door.body.allowGravity = false;
+
+        this.key = this.decorations.create(data.key.x, data.key.y, 'key');
+        this.key.anchor.setTo(0.5, 0.5);
+        this.game.physics.enable(this.key);
+        this.key.body.allowGravity = false;
     }
 
     _spawnPlatforms(data) {
