@@ -54,9 +54,21 @@ export default class extends Phaser.State {
     }
 
     _loadLevel(data) {
+        this._spawnPlatforms(data);
         this._spawnHero(data);
     }
     
+    _spawnPlatforms(data) {
+        this.platforms = this.game.add.group();
+        
+        data.platforms.forEach((platform) => {
+            let sprite = this.platforms.create(platform.x, platform.y, platform.image);
+            this.game.physics.enable(sprite);
+            sprite.body.allowGravity = false;
+            sprite.body.immovable = true;
+        });
+    }
+
     _spawnHero(data) {
         this.hero = new Hero(this.game, data.hero.x, data.hero.y);
         this.game.add.existing(this.hero);
