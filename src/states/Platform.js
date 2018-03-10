@@ -46,6 +46,7 @@ export default class extends Phaser.State {
     }
 
     _loadLevel(data) {
+        this._spawnDecorations(data);
         this._spawnPlatforms(data);
         this._spawnCoins(data);
         this._spawnHero(data);
@@ -53,6 +54,15 @@ export default class extends Phaser.State {
 
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
+    }
+
+    _spawnDecorations(data) {
+        this.decorations = this.game.add.group();
+
+        this.door = this.decorations.create(data.door.x, data.door.y, 'door');
+        this.door.anchor.setTo(0.5, 1);
+        this.game.physics.enable(this.door);
+        this.door.body.allowGravity = false;
     }
 
     _spawnPlatforms(data) {
