@@ -19,7 +19,7 @@ export default class extends Phaser.State {
         this.game.load.image('grass4x1', 'assets/images/platform/grass_4x1.png');
         this.game.load.image('grass2x1', 'assets/images/platform/grass_2x1.png');
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
-        this.game.load.image('hero', 'assets/images/platform/hero_stopped.png');
+        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.image('invisibleWall', 'assets/images/platform/invisible_wall.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
@@ -152,6 +152,10 @@ class Hero extends Phaser.Sprite {
         this.anchor.set(0.5, 0.5);
         this.game.physics.enable(this);
         this.body.collideWorldBounds = true;
+        this.animations.add('stop', [0]);
+        this.animations.add('run', [1, 2], 8, true);
+        this.animations.add('jump', [3]);
+        this.animations.add('fall', [4]);
     }
 
     move(direction) {
