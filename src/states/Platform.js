@@ -19,13 +19,14 @@ export default class extends Phaser.State {
         this.game.load.image('grass4x1', 'assets/images/platform/grass_4x1.png');
         this.game.load.image('grass2x1', 'assets/images/platform/grass_2x1.png');
         this.game.load.image('grass1x1', 'assets/images/platform/grass_1x1.png');
-        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.image('invisibleWall', 'assets/images/platform/invisible_wall.png');
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.audio('sfxStomp', 'assets/sounds/platform/stomp.wav');
+        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
         this.game.load.spritesheet('spider', 'assets/images/platform/spider.png', 42, 32);
+        this.game.load.spritesheet('door', 'assets/images/platform/door.png', 42, 66);
         this.game.load.json('level1','data/platform/level01.json');
     }
 
