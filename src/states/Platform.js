@@ -32,6 +32,7 @@ export default class extends Phaser.State {
         this.game.load.spritesheet('spider', 'assets/images/platform/spider.png', 42, 32);
         this.game.load.spritesheet('door', 'assets/images/platform/door.png', 42, 66);
         this.game.load.json('level1','data/platform/level01.json');
+        this.game.load.json('level0','data/platform/level00.json');
     }
 
     create() {
@@ -43,7 +44,7 @@ export default class extends Phaser.State {
             key: this.game.add.audio('sfxKey'),
             door: this.game.add.audio('sfxDoor')
         };
-        this._loadLevel(this.cache.getJSON('level1'));
+        this._loadLevel(this.cache.getJSON('level0'));
     }
 
     update() {
