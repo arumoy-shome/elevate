@@ -28,7 +28,7 @@ export default class extends Phaser.State {
         this.physics.arcade.gravity.y = 200;
         
         this.add.sprite(0, 0, 'background');
-        this.add.sprite(-30, this.GAME_HEIGHT-160, 'floor');
+        this.add.sprite(-30, config.candyCatch.height-160, 'floor');
         this.add.sprite(10, 5, 'score-bg');
         
         this._player = this.add.sprite(5, 760, 'monster-idle');
