@@ -44,7 +44,7 @@ export default class extends Phaser.State {
             key: this.game.add.audio('sfxKey'),
             door: this.game.add.audio('sfxDoor')
         };
-        this._loadLevel(this.cache.getJSON('level0'));
+        this._loadLevel(this.game.cache.getJSON('level0'));
     }
 
     update() {
