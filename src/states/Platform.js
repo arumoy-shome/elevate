@@ -50,7 +50,6 @@ export default class extends Phaser.State {
         this._spawnCoins(data);
         this._spawnHero(data);
         this._spawnSpiders(data);
-        this._spawnInvisibleWalls(data);
 
         const GRAVITY = 1200;
         this.game.physics.arcade.gravity.y = GRAVITY;
