@@ -178,6 +178,28 @@ class Hero extends Phaser.Sprite {
         const BOUNCE_SPEED = 200;
         this.body.velocity.y = -BOUNCE_SPEED;
     }
+
+    update() {
+        let animation = this._getAnimation();
+
+        if(this.animations.name != animation) {
+            this.animations.play(animation);
+        }
+    }
+
+    _getAnimation() {
+        let name = 'stop';
+
+        if(this.body.velocity.y < 0) {
+            name = 'jump';
+        } else if(this.body.velocity.y >= 0 && !this.body.touching.down) {
+            name = 'fall';
+        } else if(this.body.velocity.x != 0 && this.body.touching.down) {
+            name = 'run';
+        }
+
+        return name;
+    }
 }
 
 class Spider extends Phaser.Sprite {
