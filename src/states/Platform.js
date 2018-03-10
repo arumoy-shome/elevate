@@ -169,6 +169,12 @@ export default class extends Phaser.State {
             key.kill();
             this.hasKey = true;
         });
+        this.game.physics.arcade.overlap(this.hero, this.door, (hero, door) => {
+            this.sfx.door.play();
+            this.game.state.restart();
+        }, (hero, door) => {
+            return this.hasKey && hero.body.touching.down;
+        });
     }
 }
 
