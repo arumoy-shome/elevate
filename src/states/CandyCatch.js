@@ -7,9 +7,9 @@ export default class extends Phaser.State {
             left: Phaser.KeyCode.LEFT,
             right: Phaser.KeyCode.RIGHT
         });
+        this.spawnCandyTimer = 0;
         // this.player = null;
         // this._candyGroup = null;
-        // this._spawnCandyTimer = 0;
         // this._fontStyle = null;
         // define Candy variables to reuse them in Candy.item functions
         // this._scoreText = null;
@@ -19,15 +19,19 @@ export default class extends Phaser.State {
     preload() {
         this.game.load.image('background', 'assets/images/platform/background.png');
         this.game.load.image('ground', 'assets/images/platform/ground.png');
-        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.json('level-catch','data/platform/level-catch.json');
+        this.game.load.audio('sfxCandy', 'assets/sounds/platform/coin.wav');
+        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
+        this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
         // this.game.load.image('game-over', 'assets/images/candy-catch/gameover.png');
         // this.game.load.image('score-bg', 'assets/images/candy-catch/score-bg.png');
-        // this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
     }
 
     create () {
         this.game.add.image(0, 0, 'background');
+        this.sfx = {
+            candy: this.game.add.audio('sfxCandy')
+        }
         this._loadLevel(this.game.cache.getJSON('level-catch'));
 
         // this._fontStyle = { font: "40px Arial",
@@ -35,40 +39,34 @@ export default class extends Phaser.State {
         //                     stroke: "#333",
         //                     strokeThickness: 5,
         //                     align: "center" };
-        // this._spawnCandyTimer = 0;
         // this._scoreText = this.add.text(120, 20, "0", this._fontStyle);
         // this._health = 10;
-        // // create new group for candy
-        // this._candyGroup = this.add.group();
-        // // spawn first candy
-        // this.spawnCandy();
     }
 
     update() {
         this._handleInput();
         this._handleCollisions();
-        // this._spawnCandyTimer += this.time.elapsed;
-        // if(this._spawnCandyTimer > 1000) {
-        //     this._spawnCandyTimer = 0;
-        //     this.spawnCandy();
-        // }
 
-        // this._candyGroup.forEach((candy) => {
-        //     candy.angle += candy.rotateMe;
-        // });
+        this.spawnCandyTimer += this.time.elapsed;
+        if(this.spawnCandyTimer > 1000) {
+            this.spawnCandyTimer = 0;
+            this._spawnCandies();
+        }
 
         // if(!this._health) {
         //     this.add.sprite((config.candyCatch.width-594)/2,
         //                     (config.candyCatch.height-271)/2,
         //                     'game-over');
-        //     // this.game.state.restart();
-        //     this.game.paused = true;
+            // this.game.state.restart();
+            // this.game.paused = true;
         // }
     }
 
     _loadLevel(data) {
         this._spawnPlatforms(data);
         this._spawnHero(data);
+        this.candies = this.game.add.group();
+        this._spawnCandies();
 
         const GRAVITY = 100;
         this.game.physics.arcade.gravity.y = GRAVITY;
@@ -90,6 +88,18 @@ export default class extends Phaser.State {
         this.game.add.existing(this.hero);
     }
 
+    _spawnCandies() {
+        let dropPos = Math.floor(Math.random()*config.default.width);
+        let dropOffset = [-27,-36,-36,-38,-48];
+        let candyType = Math.floor(Math.random()*5);
+        let sprite = this.candies.create(dropPos, dropOffset[candyType], 'candy');
+
+        sprite.anchor.set(0.5, 0.5);
+        this.game.physics.enable(sprite);
+        sprite.animations.add('type', [candyType], 10, true);
+        sprite.animations.play('type');
+    }
+
     _handleInput() {
         if(this.keys.left.isDown) {
             this.hero.move(-1);
@@ -102,36 +112,10 @@ export default class extends Phaser.State {
 
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
-    }
-
-    spawnCandy() {
-        // let dropPos = Math.floor(Math.random()*config.candyCatch.width);
-        // let dropOffset = [-27,-36,-36,-38,-48];
-        // let candyType = Math.floor(Math.random()*5);
-        // let candy = this.add.sprite(dropPos, dropOffset[candyType], 'candy');
-
-        // candy.animations.add('anim', [candyType], 10, true);
-        // candy.animations.play('anim');
-
-        // this.physics.enable(candy, Phaser.Physics.ARCADE);
-
-        // candy.inputEnabled = true;
-        // candy.events.onInputDown.add(() => {
-        //     candy.kill();
-        //     this.game.score += 1;
-        //     this._scoreText.setText(this.game.score);
-        // });
-
-        // candy.checkWorldBounds = true;
-        // candy.events.onOutOfBounds.add(() => {
-        //     candy.kill();
-        //     this._health -= 1;
-        // });
-
-        // candy.anchor.setTo(0.5, 0.5);
-        // candy.rotateMe = (Math.random()*4)-2;
-        // // candy.scale.setTo(2, 2);
-        // this._candyGroup.add(candy);
+        this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) =>{
+            this.sfx.candy.play();
+            candy.kill();
+        });
     }
 }
 
