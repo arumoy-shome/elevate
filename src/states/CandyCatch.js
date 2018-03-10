@@ -3,6 +3,7 @@ import config from '../config';
 
 export default class extends Phaser.State {
     init() {
+        this.game.scale.setGameSize(config.candyCatch.width, config.candyCatch.height)
         this._player = null;
         this._candyGroup = null;
         this._spawnCandyTimer = 0;
