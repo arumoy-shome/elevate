@@ -161,6 +161,12 @@ class Hero extends Phaser.Sprite {
     move(direction) {
         const SPEED = 200;
         this.body.velocity.x = direction * SPEED;
+
+        if(this.body.velocity.x < 0) {
+            this.scale.x = -1;
+        } else if(this.body.velocity.x > 0) {
+            this.scale.x = 1;
+        }
     }
 
     jump() {
