@@ -9,6 +9,7 @@ export default class extends Phaser.State {
             up: Phaser.KeyCode.UP
         });
         this.score = 0;
+        this.hasKey = false;
     }
 
     preload() {
@@ -24,6 +25,8 @@ export default class extends Phaser.State {
         this.game.load.audio('sfxJump', 'assets/sounds/platform/jump.wav');
         this.game.load.audio('sfxCoin', 'assets/sounds/platform/coin.wav');
         this.game.load.audio('sfxStomp', 'assets/sounds/platform/stomp.wav');
+        this.game.load.audio('sfxKey', 'assets/sounds/platform/key.wav');
+        this.game.load.audio('sfxDoor', 'assets/sounds/platform/door.wav');
         this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.spritesheet('coin', 'assets/images/platform/coin_animated.png', 22, 22);
         this.game.load.spritesheet('spider', 'assets/images/platform/spider.png', 42, 32);
@@ -36,7 +39,9 @@ export default class extends Phaser.State {
         this.sfx = {
             jump: this.game.add.audio('sfxJump'),
             coin: this.game.add.audio('sfxCoin'),
-            stomp: this.game.add.audio('sfxStomp')
+            stomp: this.game.add.audio('sfxStomp'),
+            key: this.game.add.audio('sfxKey'),
+            door: this.game.add.audio('sfxDoor')
         };
         this._loadLevel(this.cache.getJSON('level1'));
     }
@@ -158,6 +163,11 @@ export default class extends Phaser.State {
                 this.sfx.stomp.play();
                 this.game.state.restart();
             }
+        });
+        this.game.physics.arcade.overlap(this.hero, this.key, (hero, key) => {
+            this.sfx.key.play();
+            key.kill();
+            this.hasKey = true;
         });
     }
 }
