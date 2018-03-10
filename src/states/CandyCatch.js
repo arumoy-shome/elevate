@@ -14,6 +14,7 @@ export default class extends Phaser.State {
     }
     
     preload() {
+        this.load.image('background', 'assets/images/candy-catch/background.png');
         this.load.image('floor', 'assets/images/candy-catch/floor.png');
         this.load.image('title', 'assets/images/candy-catch/title.png');
         this.load.image('game-over', 'assets/images/candy-catch/gameover.png');
@@ -63,15 +64,15 @@ export default class extends Phaser.State {
         });
         
         if(!this._health) {
-            this.add.sprite((config.gameWidth-594)/2,
-                            (config.gameHeight-271)/2,
+            this.add.sprite((config.candyCatch.width-594)/2,
+                            (config.candyCatch.height-271)/2,
                             'game-over');
             this.game.paused = true;
         }
     }
 
     spawnCandy() {
-        let dropPos = Math.floor(Math.random()*config.gameWidth);
+        let dropPos = Math.floor(Math.random()*config.candyCatch.width);
         let dropOffset = [-27,-36,-36,-38,-48];
         let candyType = Math.floor(Math.random()*5);
         let candy = this.add.sprite(dropPos, dropOffset[candyType], 'candy');
