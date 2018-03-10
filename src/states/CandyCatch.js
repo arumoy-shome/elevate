@@ -44,29 +44,9 @@ export default class extends Phaser.State {
         // this.spawnCandy();
     }
 
-    _loadLevel(data) {
-        this._spawnPlatforms(data);
-        this._spawnHero(data);
-    }
-
-    _spawnPlatforms(data) {
-        this.platforms = this.game.add.group();
-
-        data.platforms.forEach((platform) => {
-            let sprite = this.platforms.create(platform.x, platform.y, platform.image);
-            this.game.physics.enable(sprite);
-            sprite.body.allowGravity = false;
-            sprite.body.immovable = true;
-        });
-    }
-
-    _spawnHero(data) {
-        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
-        this.game.add.existing(this.hero);
-    }
-
     update() {
         this._handleInput();
+        this._handleCollisions();
         // this._spawnCandyTimer += this.time.elapsed;
         // if(this._spawnCandyTimer > 1000) {
         //     this._spawnCandyTimer = 0;
@@ -86,6 +66,30 @@ export default class extends Phaser.State {
         // }
     }
 
+    _loadLevel(data) {
+        this._spawnPlatforms(data);
+        this._spawnHero(data);
+
+        const GRAVITY = 100;
+        this.game.physics.arcade.gravity.y = GRAVITY;
+    }
+
+    _spawnPlatforms(data) {
+        this.platforms = this.game.add.group();
+
+        data.platforms.forEach((platform) => {
+            let sprite = this.platforms.create(platform.x, platform.y, platform.image);
+            this.game.physics.enable(sprite);
+            sprite.body.allowGravity = false;
+            sprite.body.immovable = true;
+        });
+    }
+
+    _spawnHero(data) {
+        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
+        this.game.add.existing(this.hero);
+    }
+
     _handleInput() {
         if(this.keys.left.isDown) {
             this.hero.move(-1);
@@ -94,6 +98,10 @@ export default class extends Phaser.State {
         } else {
             this.hero.move(0);
         }
+    }
+
+    _handleCollisions() {
+        this.game.physics.arcade.collide(this.hero, this.platforms);
     }
 
     spawnCandy() {
@@ -133,10 +141,8 @@ class Hero extends Phaser.Sprite {
         this.anchor.set(0.5, 0.5);
         this.game.physics.enable(this);
         this.body.collideWorldBounds = true;
-        // this.animations.add('stop', [0]);
-        // this.animations.add('run', [1, 2], 8, true);
-        // this.animations.add('jump', [3]);
-        // this.animations.add('fall', [4]);
+        this.animations.add('stop', [0]);
+        this.animations.add('run', [1, 2], 8, true);
     }
 
     move(direction) {
@@ -148,5 +154,23 @@ class Hero extends Phaser.Sprite {
         } else if(this.body.velocity.x > 0) {
             this.scale.x = 1;
         }
+    }
+
+    update() {
+        let animation = this._getAnimation();
+
+        if(this.animations.name != animation) {
+            this.animations.play(animation);
+        }
+    }
+
+    _getAnimation() {
+        let name = 'stop';
+
+        if(this.body.velocity.x != 0 && this.body.touching.down) {
+            name = 'run';
+        }
+
+        return name;
     }
 }
