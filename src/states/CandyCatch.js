@@ -15,6 +15,7 @@ export default class extends Phaser.State {
             { index: 3, value: 72 },
             { index: 4, value: 65 }
         ];
+        this.rightAnswer = 93;
         // this.player = null;
         // this._candyGroup = null;
         // this._fontStyle = null;
@@ -122,10 +123,12 @@ export default class extends Phaser.State {
 
     _handleCollisions() {
         this.game.physics.arcade.collide(this.hero, this.platforms);
-        this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) =>{
+        this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) => {
             this.sfx.candy.play();
             candy.kill();
             hero.collections.push(candy.value);
+
+            if(hero.collections.pop() === this.rightAnswer) { this.game.state.restart() };
         });
     }
 }
