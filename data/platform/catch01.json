@@ -1,0 +1,15 @@
+{ 
+    "platforms": [
+        {"image": "ground", "x": 0, "y": 546}
+    ],
+    "hero": {"x": 21, "y": 525},
+    "candies": [
+        { "index": 0, "value": 93 },
+        { "index": 1, "value": 86 },
+        { "index": 2, "value": 79 },
+        { "index": 3, "value": 72 },
+        { "index": 4, "value": 65 }
+    ],
+    "question": "93 - 7 = ?",
+    "rightAnswer": 86
+}
