@@ -1,30 +1,29 @@
 import Phaser from 'phaser';
 import config from '../config';
 
+
 export default class extends Phaser.State {
-    init() {
+    init(data) {
         this.keys = this.input.keyboard.addKeys({
             left: Phaser.KeyCode.LEFT,
             right: Phaser.KeyCode.RIGHT
         });
         this.spawnCandyTimer = 0;
-        // this.player = null;
-        // this._candyGroup = null;
-        // this._fontStyle = null;
-        // define Candy variables to reuse them in Candy.item functions
-        // this._scoreText = null;
-        // this._health = 0;
+        this.level = (data.level || 0);
     }
 
     preload() {
         this.game.load.image('background', 'assets/images/platform/background.png');
         this.game.load.image('ground', 'assets/images/platform/ground.png');
-        this.game.load.json('level-catch','data/platform/level-catch.json');
+        this.game.load.json('catch-0','data/platform/catch00.json');
+        this.game.load.json('catch-1','data/platform/catch01.json');
+        this.game.load.json('catch-2','data/platform/catch02.json');
+        this.game.load.json('catch-3','data/platform/catch03.json');
+        this.game.load.json('catch-4','data/platform/catch04.json');
         this.game.load.audio('sfxCandy', 'assets/sounds/platform/coin.wav');
         this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
         this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
-        // this.game.load.image('game-over', 'assets/images/candy-catch/gameover.png');
-        // this.game.load.image('score-bg', 'assets/images/candy-catch/score-bg.png');
+        this.game.load.image('game-over', 'assets/images/candy-catch/gameover.png');
     }
 
     create () {
@@ -32,7 +31,7 @@ export default class extends Phaser.State {
         this.sfx = {
             candy: this.game.add.audio('sfxCandy')
         };
-        this.data = this.game.cache.getJSON('level-catch');
+        this.data = this.game.cache.getJSON(`catch-${this.level}`);
         this._loadLevel(this.data);
 
         // this._fontStyle = { font: "40px Arial",
@@ -121,7 +120,14 @@ export default class extends Phaser.State {
             candy.kill();
             hero.collections.push(candy.value);
 
-            if(hero.collections.pop() === this.data.rightAnswer) { this.game.state.restart() };
+            if(hero.collections.pop() === this.data.rightAnswer) {
+                if(this.level === 4) {
+                    this.game.add.sprite(200, 100, 'game-over');
+                    this.game.paused = true;
+                } else {
+                    this.game.state.restart(true, false, { level: this.level + 1 });
+                }
+            }
         });
     }
 }
