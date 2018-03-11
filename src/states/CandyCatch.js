@@ -28,18 +28,20 @@ export default class extends Phaser.State {
 
     create () {
         this.game.add.image(0, 0, 'background');
-        this.sfx = {
-            candy: this.game.add.audio('sfxCandy')
-        };
+        this.sfx = { candy: this.game.add.audio('sfxCandy') };
         this.data = this.game.cache.getJSON(`catch-${this.level}`);
-        this._loadLevel(this.data);
 
-        // this._fontStyle = { font: "40px Arial",
-        //                     fill: "#FFCC00",
-        //                     stroke: "#333",
-        //                     strokeThickness: 5,
-        //                     align: "center" };
-        // this._scoreText = this.add.text(120, 20, "0", this._fontStyle);
+        this._addQuestion();
+        this._loadLevel(this.data);
+    }
+
+    _addQuestion() {
+        let questionStyle = { font: "40px Arial",
+                              fill: "#FFCC00",
+                              stroke: "#333",
+                              strokeThickness: 5,
+                              align: "center" };
+        this.game.add.text(120, 20, this.data.question, questionStyle);
     }
 
     update() {
