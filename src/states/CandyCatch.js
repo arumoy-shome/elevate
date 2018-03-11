@@ -125,7 +125,7 @@ export default class extends Phaser.State {
         this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) =>{
             this.sfx.candy.play();
             candy.kill();
-            console.log(candy.value);
+            hero.collections.push(candy.value);
         });
     }
 }
@@ -138,6 +138,7 @@ class Hero extends Phaser.Sprite {
         this.body.collideWorldBounds = true;
         this.animations.add('stop', [0]);
         this.animations.add('run', [1, 2], 8, true);
+        this.collections = [];
     }
 
     move(direction) {
