@@ -10,6 +10,13 @@ export default class extends Phaser.State {
         });
         this.spawnCandyTimer = 0;
         this.level = (data.level || 0);
+        this.export = {
+            game: "candy catch",
+            level: this.level,
+            time: 0,
+            answer: 0,
+            collection: null
+        }
     }
 
     preload() {
@@ -125,15 +132,28 @@ export default class extends Phaser.State {
             candy.kill();
             hero.collections.push(candy.value);
 
-            if(hero.collections.pop() === this.data.rightAnswer) {
+            if(hero.collections[hero.collections.length-1] === this.data.rightAnswer) {
                 if(this.level === 4) {
+                    this._exportData();
                     this.game.add.sprite(200, 100, 'game-over');
                     this.game.paused = true;
                 } else {
-                    this.game.state.restart(true, false, { level: this.level + 1 });
+                    this._handleWinState();
                 }
             }
         });
+    }
+
+    _handleWinState() {
+        this._exportData();
+        this.game.state.restart(true, false, { level: this.level + 1 });
+    }
+
+    _exportData() {
+        this.export.time = this.game.time.elapsed;
+        this.export.answer = this.data.rightAnswer;
+        this.export.collection = this.hero.collections;
+        console.log(this.export);
     }
 }
 
