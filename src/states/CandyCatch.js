@@ -10,11 +10,14 @@ export default class extends Phaser.State {
         });
         this.spawnCandyTimer = 0;
         this.level = (data.level || 0);
+        this.heroVsCandyCount = 0;
+        this.elapsedTime = 0;
         this.export = {
             game: "candy catch",
             level: this.level,
             time: 0,
             answer: 0,
+            score: 0,
             collection: null
         }
     }
@@ -52,10 +55,12 @@ export default class extends Phaser.State {
     }
 
     update() {
+        this.elapsedTime += this.game.time.elapsed;
+        this.spawnCandyTimer += this.time.elapsed;
+
         this._handleInput();
         this._handleCollisions();
 
-        this.spawnCandyTimer += this.time.elapsed;
         if(this.spawnCandyTimer > 1000) {
             this.spawnCandyTimer = 0;
             this._spawnCandies(this.data.candies);
@@ -131,6 +136,9 @@ export default class extends Phaser.State {
             this.sfx.candy.play();
             candy.kill();
             hero.collections.push(candy.value);
+            this.heroVsCandyCount++;
+
+            if(this._scored(hero)) { this.export.score = 1; }
 
             if(hero.collections[hero.collections.length-1] === this.data.rightAnswer) {
                 if(this.level === 4) {
@@ -144,13 +152,17 @@ export default class extends Phaser.State {
         });
     }
 
+    _scored(hero) {
+        return (this.heroVsCandyCount === 1 &&
+                hero.collections[hero.collections.length-1] === this.data.rightAnswer);
+    }
     _handleWinState() {
         this._exportData();
         this.game.state.restart(true, false, { level: this.level + 1 });
     }
 
     _exportData() {
-        this.export.time = this.game.time.elapsed;
+        this.export.time = (this.elapsedTime / 1000);
         this.export.answer = this.data.rightAnswer;
         this.export.collection = this.hero.collections;
         console.log(this.export);
