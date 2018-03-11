@@ -8,6 +8,13 @@ export default class extends Phaser.State {
             right: Phaser.KeyCode.RIGHT
         });
         this.spawnCandyTimer = 0;
+        this.candyType = [
+            { index: 0, value: 93 },
+            { index: 1, value: 86 },
+            { index: 2, value: 79 },
+            { index: 3, value: 72 },
+            { index: 4, value: 65 }
+        ];
         // this.player = null;
         // this._candyGroup = null;
         // this._fontStyle = null;
@@ -91,12 +98,15 @@ export default class extends Phaser.State {
     _spawnCandies() {
         let dropPos = Math.floor(Math.random()*config.default.width);
         let dropOffset = [-27,-36,-36,-38,-48];
-        let candyType = Math.floor(Math.random()*5);
-        let sprite = this.candies.create(dropPos, dropOffset[candyType], 'candy');
+        let candyType = Math.floor(Math.random()*this.candyType.length);
+        let candyIndex = this.candyType[candyType].index;
+        let candyValue = this.candyType[candyType].value;
+        let sprite = this.candies.create(dropPos, dropOffset[candyIndex], 'candy');
 
+        sprite.value = candyValue;
         sprite.anchor.set(0.5, 0.5);
         this.game.physics.enable(sprite);
-        sprite.animations.add('type', [candyType], 10, true);
+        sprite.animations.add('type', [candyIndex], 10, true);
         sprite.animations.play('type');
     }
 
@@ -115,6 +125,7 @@ export default class extends Phaser.State {
         this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) =>{
             this.sfx.candy.play();
             candy.kill();
+            console.log(candy.value);
         });
     }
 }
