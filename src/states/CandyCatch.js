@@ -8,14 +8,6 @@ export default class extends Phaser.State {
             right: Phaser.KeyCode.RIGHT
         });
         this.spawnCandyTimer = 0;
-        this.candyType = [
-            { index: 0, value: 93 },
-            { index: 1, value: 86 },
-            { index: 2, value: 79 },
-            { index: 3, value: 72 },
-            { index: 4, value: 65 }
-        ];
-        this.rightAnswer = 93;
         // this.player = null;
         // this._candyGroup = null;
         // this._fontStyle = null;
@@ -39,8 +31,9 @@ export default class extends Phaser.State {
         this.game.add.image(0, 0, 'background');
         this.sfx = {
             candy: this.game.add.audio('sfxCandy')
-        }
-        this._loadLevel(this.game.cache.getJSON('level-catch'));
+        };
+        this.data = this.game.cache.getJSON('level-catch');
+        this._loadLevel(this.data);
 
         // this._fontStyle = { font: "40px Arial",
         //                     fill: "#FFCC00",
@@ -48,7 +41,6 @@ export default class extends Phaser.State {
         //                     strokeThickness: 5,
         //                     align: "center" };
         // this._scoreText = this.add.text(120, 20, "0", this._fontStyle);
-        // this._health = 10;
     }
 
     update() {
@@ -58,7 +50,7 @@ export default class extends Phaser.State {
         this.spawnCandyTimer += this.time.elapsed;
         if(this.spawnCandyTimer > 1000) {
             this.spawnCandyTimer = 0;
-            this._spawnCandies();
+            this._spawnCandies(this.data.candies);
         }
 
         // if(!this._health) {
@@ -71,19 +63,20 @@ export default class extends Phaser.State {
     }
 
     _loadLevel(data) {
-        this._spawnPlatforms(data);
-        this._spawnHero(data);
+        this._spawnPlatforms(data.platforms);
+        this._spawnHero(data.hero);
+
         this.candies = this.game.add.group();
-        this._spawnCandies();
+        this._spawnCandies(data.candies);
 
         const GRAVITY = 100;
         this.game.physics.arcade.gravity.y = GRAVITY;
     }
 
-    _spawnPlatforms(data) {
+    _spawnPlatforms(platforms) {
         this.platforms = this.game.add.group();
 
-        data.platforms.forEach((platform) => {
+        platforms.forEach((platform) => {
             let sprite = this.platforms.create(platform.x, platform.y, platform.image);
             this.game.physics.enable(sprite);
             sprite.body.allowGravity = false;
@@ -91,19 +84,19 @@ export default class extends Phaser.State {
         });
     }
 
-    _spawnHero(data) {
-        this.hero = new Hero(this.game, data.hero.x, data.hero.y);
+    _spawnHero(hero) {
+        this.hero = new Hero(this.game,hero.x, hero.y);
         this.game.add.existing(this.hero);
     }
 
-    _spawnCandies() {
+    _spawnCandies(candies) {
         let dropPos = Math.floor(Math.random()*config.default.width);
         let dropOffset = [-27,-36,-36,-38,-48];
-        let candyType = Math.floor(Math.random()*this.candyType.length);
-        let candyIndex = this.candyType[candyType].index;
-        let candyValue = this.candyType[candyType].value;
-        let sprite = this.candies.create(dropPos, dropOffset[candyIndex], 'candy');
+        let candyType = Math.floor(Math.random()*candies.length);
+        let candyIndex = candies[candyType].index;
+        let candyValue = candies[candyType].value;
 
+        let sprite = this.candies.create(dropPos, dropOffset[candyIndex], 'candy');
         sprite.value = candyValue;
         sprite.anchor.set(0.5, 0.5);
         this.game.physics.enable(sprite);
@@ -128,7 +121,7 @@ export default class extends Phaser.State {
             candy.kill();
             hero.collections.push(candy.value);
 
-            if(hero.collections.pop() === this.rightAnswer) { this.game.state.restart() };
+            if(hero.collections.pop() === this.data.rightAnswer) { this.game.state.restart() };
         });
     }
 }
