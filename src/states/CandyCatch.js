@@ -36,12 +36,12 @@ export default class extends Phaser.State {
     }
 
     _addQuestion() {
-        let questionStyle = { font: "40px Arial",
+        let style = { font: "40px Arial",
                               fill: "#FFCC00",
                               stroke: "#333",
                               strokeThickness: 5,
                               align: "center" };
-        this.game.add.text(120, 20, this.data.question, questionStyle);
+        this.game.add.text(120, 20, this.data.question, style);
     }
 
     update() {
@@ -53,14 +53,6 @@ export default class extends Phaser.State {
             this.spawnCandyTimer = 0;
             this._spawnCandies(this.data.candies);
         }
-
-        // if(!this._health) {
-        //     this.add.sprite((config.candyCatch.width-594)/2,
-        //                     (config.candyCatch.height-271)/2,
-        //                     'game-over');
-            // this.game.state.restart();
-            // this.game.paused = true;
-        // }
     }
 
     _loadLevel(data) {
@@ -103,6 +95,17 @@ export default class extends Phaser.State {
         this.game.physics.enable(sprite);
         sprite.animations.add('type', [candyIndex], 10, true);
         sprite.animations.play('type');
+        this._addCandyText(sprite);
+    }
+
+    _addCandyText(sprite) {
+        let style = { font: "25px Arial",
+                              fill: "#FFCC00",
+                              stroke: "#333",
+                              strokeThickness: 5,
+                              align: "center" };
+        let text = this.game.add.text(-10, -10, sprite.value, style);
+        sprite.addChild(text);
     }
 
     _handleInput() {
