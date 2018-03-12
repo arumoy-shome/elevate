@@ -16,6 +16,7 @@ export default class extends Phaser.State {
 
     _loadLevel(data) {
         this._spawnCandies(data);
+        this._loadSequence(data.number);
     }
 
     _spawnCandies(data) {
@@ -29,5 +30,12 @@ export default class extends Phaser.State {
             sprite.animations.add('type', [candyType], 10, true);
             sprite.animations.play('type');
         });
+    }
+
+    _loadSequence(number) {
+        for (let i = 0; i < number; i++)
+            this.sequence.push(i);
+        this.sequence = Phaser.ArrayUtils.shuffle(this.sequence);
+        console.log(this.sequence);
     }
 }
