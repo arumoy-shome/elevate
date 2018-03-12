@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import config from '../config';
 
 export default class extends Phaser.State {
+    init() {
+        this.sequence = [];
+    }
+
     preload() {
         this.game.load.json('simon-0', 'data/simon/simon00.json')
         this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
@@ -15,27 +19,28 @@ export default class extends Phaser.State {
     }
 
     _loadLevel(data) {
-        this._spawnCandies(data);
-        this._loadSequence(data.number);
+        this._spawnCandies(data.candies);
+        this._loadSequence(data.candies);
     }
 
-    _spawnCandies(data) {
+    _spawnCandies(candies) {
         this.candies = this.game.add.group();
 
-        data.positions.forEach((position) => {
-            let candyType = Math.floor(Math.random()*data.number);
+        candies.forEach((candy) => {
+            let candyType = Math.floor(Math.random()*candies.length);
 
-            let sprite = this.candies.create(position.x, position.y, 'candy');
+            let sprite = this.candies.create(candy.x, candy.y, 'candy');
+            sprite.id = candy.id;
             sprite.anchor.set(0.5, 0.5);
             sprite.animations.add('type', [candyType], 10, true);
             sprite.animations.play('type');
         });
     }
 
-    _loadSequence(number) {
-        for (let i = 0; i < number; i++)
-            this.sequence.push(i);
+    _loadSequence(candies) {
+        candies.forEach((candy) => {
+            this.sequence.push(candy.id);
+        });
         this.sequence = Phaser.ArrayUtils.shuffle(this.sequence);
-        console.log(this.sequence);
     }
 }
