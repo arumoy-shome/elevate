@@ -17,6 +17,6 @@ export default class extends Phaser.State {
     }
     
     _startGame() {
-        this.game.state.start('CandyCatch', true, false, {level: 0});
+        this.game.state.start('Simon');
     }
 }
