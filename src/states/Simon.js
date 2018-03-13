@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import config from '../config'
 
 export default class extends Phaser.State {
+    init() {
+        this.intro = false;
+    }
+
     preload() {
         this.game.load.json('simon','data/simon/simon.json');
         this.game.load.spritesheet('item', 'assets/images/simon/number-buttons.png', 160, 160);
@@ -12,6 +16,9 @@ export default class extends Phaser.State {
         this.data = this.game.cache.getJSON('simon');
 
         this._loadLevel(this.data.buttons);
+        this._playIntro();
+        //     setUp();
+        //     setTimeout(function(){simonSequence(); intro = false;}, 6000);
     }
 
     _loadLevel(buttons) {
@@ -20,7 +27,7 @@ export default class extends Phaser.State {
         buttons.forEach((button, index) => {
             let sprite = this.buttons.create(button.x, button.y, 'item', index)
             // this._handleInput(sprite);
-            // sprite.alpha = 0;
+            sprite.alpha = 0;
         });
     }
 
@@ -31,47 +38,19 @@ export default class extends Phaser.State {
         sprite.events.onInputUp.add(release);
         sprite.events.onInputOut.add(moveOff);
     }
+
+    _playIntro() {
+        for (let i = 0; i < 6; i++) {
+            let flashing = game.add.tween(this.buttons.getAt(i)).
+                to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 4, true);
+            let final = game.add.tween(this.buttons.getAt(i)).
+                to( { alpha: .25 }, 500, Phaser.Easing.Linear.None, true);
+
+            flashing.chain(final);
+            flashing.start();
+        }
+    }
 }
-
-// function create() {
-
-//     scoreText = game.add.text(16, 40, 'Score: 0/3', { fontSize: '32px', fill: '#000' });
-
-//     introTween();
-//     setUp();
-//     setTimeout(function(){simonSequence(); intro = false;}, 6000);
-
-// }
-
-// // function restart() {
-
-// //     N = 3;
-// //     userCount = 0;
-// //     currentCount = 0;
-// //     sequenceList = [];
-// //     winner = false;
-// //     loser = false;
-// //     introTween();
-// //     setUp();
-// //     setTimeout(function(){simonSequence(); intro=false;}, 6000);
-
-// // }
-
-// function introTween() {
-//     // This will flash the 6 tiles
-//     intro = true;
-
-//     for (var i = 0; i < 6; i++)
-//     {
-//         var flashing = game.add.tween(simon.getAt(i)).to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 4, true);
-//         var final = game.add.tween(simon.getAt(i)).to( { alpha: .25 }, 500, Phaser.Easing.Linear.None, true);
-
-//         flashing.chain(final);
-//         flashing.start();
-//     }
-
-// }
-
 // function update() {
 
 //     if (simonSez)
