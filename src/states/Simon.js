@@ -26,8 +26,9 @@ export default class extends Phaser.State {
         this.game.add.image(0, 0, 'background');
         this.data = this.game.cache.getJSON('simon');
 
+        this._addInstructions();
         this._loadLevel(this.data.buttons);
-        this._playIntro();
+        // this._playIntro();
         this._setSequence();
         setTimeout(() => {
             this._simonSequence();
@@ -52,6 +53,32 @@ export default class extends Phaser.State {
                 }, 400 - this.N * 20);
             }
         }
+    }
+
+    render() {
+        if(!this.intro) {
+            if(this.simonSez)
+                game.debug.text('Pick the following groceries', 300, 96, 'rgb(255,0,0)');
+            else
+                game.debug.text('Your Turn', 360, 96, 'rgb(0,255,0)');
+        } else {
+            game.debug.text('Get Ready', 360, 96, 'rgb(0,0,255)');
+        }
+
+        if(this.winner)
+            game.debug.text('You Win!', 360, 62, 'rgb(0,0,255)');
+        else if (this.loser)
+            game.debug.text('You Lose!', 360, 62, 'rgb(0,0,255)');
+    }
+
+    _addInstructions() {
+        let style = { font: "40px Arial",
+                      fill: "#FFCC00",
+                      stroke: "#333",
+                      strokeThickness: 5,
+                      align: "center" };
+        let text = 'Follow the instructions to select your grocery list.';
+        this.game.add.text(50, 25, text, style);
     }
 
     _loadLevel(buttons) {
@@ -143,40 +170,3 @@ export default class extends Phaser.State {
 
 
 
-// function render() {
-
-//     game.debug.text('Follow the instructions to select your grocery list.', 10, 32, 'rgb(0,0,255)');
-
-//     if (!this.intro)
-//     {
-//         if (this.simonSez)
-//         {
-//             game.debug.text('Pick the following groceries', 300, 96, 'rgb(255,0,0)');
-//         }
-//         else
-//         {
-//             game.debug.text('Your Turn', 360, 96, 'rgb(0,255,0)');
-//         }
-//     }
-//     else
-//     {
-//         game.debug.text('Get Ready', 360, 96, 'rgb(0,0,255)');
-//     }
-
-//     if (this.winner)
-//     {
-//         game.debug.text('You Win!', 360, 62, 'rgb(0,0,255)');
-
-//         // Save score & transition to next game
-//         scoreText.text = 'FINAL Score: ' + score + '/3';
-
-//     }
-//     else if (this.loser)
-//     {
-//         game.debug.text('You Lose!', 360, 62, 'rgb(0,0,255)');
-
-//         // Save score & transition to next game
-//         scoreText.text = 'FINAL Score: ' + score + '/3';
-//     }
-
-// }
