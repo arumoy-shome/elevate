@@ -1,68 +1,247 @@
-import Phaser from 'phaser';
-import config from '../config';
+// mods by Patrick OReilly
+// Twitter: @pato_reilly Web: http://patricko.byethost9.com
 
-export default class extends Phaser.State {
-    init() {
-        this.sequence = [];
-        this.elapsedTime = 0;
-        this.waitTime = 5000;
-        this.sequencePlayed = false;
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+function preload() {
+
+    game.load.spritesheet('item', 'assets/buttons/number-buttons.png', 160, 160);
+    game.load.image('sky', 'assets/buttons/sky.png');
+}
+
+var simon;
+var N = 3;
+var userCount = 0;
+var currentCount = 0;
+var sequenceCount = 3;
+var sequenceList = [];
+var simonSez = false;
+var timeCheck;
+var litSquare;
+var winner;
+var loser;
+var intro;
+
+var score = 0;
+var scoreText;
+
+function create() {
+
+    this.scale.pageAlignHorizontally = true;
+    this.scale.pageAlignVertically = true;
+    this.scale.setScreenSize(true);
+
+    //  A simple background for our game
+    bg = game.add.sprite(0, 0, 'sky'); 
+
+    simon = game.add.group();
+    var item;
+
+    for (var i = 0; i < 3; i++)
+    {
+        // Adds the 3 items in the first row to simon group
+        item = simon.create(150 + 168 * i, 150, 'item', i);
+        // Enable input.
+        item.inputEnabled = true;
+        item.input.start(0, true);
+        item.events.onInputDown.add(select);
+        item.events.onInputUp.add(release);
+        item.events.onInputOut.add(moveOff);
+        simon.getAt(i).alpha = 0;
     }
 
-    preload() {
-        this.game.load.json('simon-0', 'data/simon/simon00.json')
-        this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
+    for (var i = 0; i < 3; i++)
+    {
+        // Adds the 3 items in the second row to simon group
+        item = simon.create(150 + 168 * i, 318, 'item', i + 3);
+        // Enable input.
+        item.inputEnabled = true;
+        item.input.start(0, true);
+        item.events.onInputDown.add(select);
+        item.events.onInputUp.add(release);
+        item.events.onInputOut.add(moveOff);
+        simon.getAt(i + 3).alpha = 0;
     }
 
-    create() {
-        this.game.add.image(0, 0, 'background');
-        let style = { font: "40px Arial",
-                              fill: "#FFCC00",
-                              stroke: "#333",
-                              strokeThickness: 5,
-                              align: "center" };
-        this.notificationText = this.game.add.text(25, 25, "", style)
+    scoreText = game.add.text(16, 40, 'Score: 0/3', { fontSize: '32px', fill: '#000' });
 
-        this.data = this.game.cache.getJSON('simon-0');
-        this._loadLevel(this.data);
-    }
-    
-    update() {
-        this.elapsedTime += this.game.time.elapsed;
-        this._playReady();
-    }
-    
-    _playReady() {
-        this.notificationText.setText("");
+    introTween();
+    setUp();
+    setTimeout(function(){simonSequence(); intro = false;}, 6000);
 
-        if (!this.sequencePlayed && this.elapsedTime <= this.waitTime) {
-            let timer = Math.floor((this.waitTime - this.elapsedTime) / 1000);
-            this.notificationText.setText(timer > 0 ? `Get Ready! ${timer}` : "GO!")
-        } 
-    }
+}
 
-    _loadLevel(data) {
-        this._spawnCandies(data.candies);
-        this._loadSequence(data.candies);
-    }
+// function restart() {
 
-    _spawnCandies(candies) {
-        this.candies = this.game.add.group();
+//     N = 3;
+//     userCount = 0;
+//     currentCount = 0;
+//     sequenceList = [];
+//     winner = false;
+//     loser = false;
+//     introTween();
+//     setUp();
+//     setTimeout(function(){simonSequence(); intro=false;}, 6000);
 
-        candies.forEach((candy) => {
-            let candyType = Math.floor(Math.random()*candies.length);
+// }
 
-            let sprite = this.candies.create(candy.x, candy.y, 'candy');
-            sprite.anchor.set(0.5, 0.5);
-            sprite.animations.add('type', [candyType], 10, true);
-            sprite.animations.play('type');
-        });
+function introTween() {
+    // This will flash the 6 tiles 
+    intro = true;
+
+    for (var i = 0; i < 6; i++)
+    {
+        var flashing = game.add.tween(simon.getAt(i)).to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 4, true);
+        var final = game.add.tween(simon.getAt(i)).to( { alpha: .25 }, 500, Phaser.Easing.Linear.None, true);
+
+        flashing.chain(final);
+        flashing.start();
     }
 
-    _loadSequence(candies) {
-        candies.forEach((candy) => {
-            this.sequence.push(candy.id);
-        });
-        this.sequence = Phaser.ArrayUtils.shuffle(this.sequence);
+}
+
+function update() {
+
+    if (simonSez)
+    {
+        if (game.time.now - timeCheck >700-N*40)
+        {
+            simon.getAt(litSquare).alpha = .25;
+            game.paused = true;
+
+            setTimeout(function()
+            {
+                if ( currentCount< N)
+                {
+                    game.paused = false;
+                    simonSequence();
+                }
+                else
+                {
+                    simonSez = false;
+                    game.paused = false;
+                }
+            }, 400 - N * 20);
+        }
     }
+}
+
+function playerSequence(selected) {
+
+    correctSquare = sequenceList[userCount];
+    userCount++;
+    thisSquare = simon.getIndex(selected);
+
+    if (thisSquare == correctSquare)
+    {
+        if (userCount == N)
+        {
+            if (N == sequenceCount)
+            {
+                winner = true;
+                //setTimeout(function(){restart();}, 3000);
+            }
+            else
+            {
+                userCount = 0;
+                currentCount = 0;
+                N++;
+                simonSez = true;
+            }
+        }
+        score += 1;
+        scoreText.text = 'Score: ' + score + '/3';
+    }
+    else
+    {
+        loser = true;
+        //setTimeout(function(){restart();}, 3000);
+    }
+
+}
+
+function simonSequence () {
+
+    simonSez = true;
+    litSquare = sequenceList[currentCount];
+    simon.getAt(litSquare).alpha = 1;
+    timeCheck = game.time.now;
+    currentCount++;
+
+}
+
+function setUp() {
+
+    // This will set a ranmon sequence of 3 numbers (since sequenceCount is set to 3) of numbers betweem 0,5 (since 6 tiles)
+    for (var i = 0; i < sequenceCount; i++)
+    {
+        thisSquare = game.rnd.integerInRange(0,5);
+        sequenceList.push(thisSquare);
+    }
+
+}
+
+function select(item, pointer) {
+
+    if (!simonSez && !intro && !loser && !winner)
+    {
+        item.alpha = 1;
+    }
+
+}
+
+function release(item, pointer) {
+
+    if (!simonSez && !intro && !loser && !winner)
+    {
+        item.alpha = .25;
+        playerSequence(item);
+    }
+}
+
+function moveOff(item, pointer) {
+
+    if (!simonSez && !intro && !loser && !winner)
+    {
+        item.alpha = .25;
+    }
+
+}
+
+function render() {
+
+    game.debug.text('Follow the instructions to select your grocery list.', 10, 32, 'rgb(0,0,255)');
+
+    if (!intro)
+    {
+        if (simonSez)
+        {
+            game.debug.text('Pick the following groceries', 300, 96, 'rgb(255,0,0)');
+        }
+        else
+        {
+            game.debug.text('Your Turn', 360, 96, 'rgb(0,255,0)');
+        }
+    }
+    else
+    {
+        game.debug.text('Get Ready', 360, 96, 'rgb(0,0,255)');
+    }
+
+    if (winner)
+    {
+        game.debug.text('You Win!', 360, 62, 'rgb(0,0,255)');
+
+        // Save score & transition to next game
+        scoreText.text = 'FINAL Score: ' + score + '/3';
+
+    }
+    else if (loser)
+    {
+        game.debug.text('You Lose!', 360, 62, 'rgb(0,0,255)');
+
+        // Save score & transition to next game
+        scoreText.text = 'FINAL Score: ' + score + '/3';
+    }
+
 }
