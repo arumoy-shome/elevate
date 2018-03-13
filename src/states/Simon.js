@@ -33,7 +33,7 @@ export default class extends Phaser.State {
         setTimeout(() => {
             this._simonSequence();
             this.intro = false;
-        }, 6000);
+        }, 2000);
     }
 
     update() {
