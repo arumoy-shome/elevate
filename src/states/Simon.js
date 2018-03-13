@@ -160,10 +160,10 @@ export default class extends Phaser.State {
                 }
             }
             this.score += 1;
+            console.log(`score: ${this.score}`);
         } else {
             this.loser = true;
         }
-
     }
 }
 
