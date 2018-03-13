@@ -11,6 +11,10 @@ export default class extends Phaser.State {
         this.currentCount = 0;
         this.timeCheck = 0;
         this.N = 0;
+        this.userCount = 0;
+        this.score = 0;
+        this.winner = false;
+        this.loser = false;
     }
 
     preload() {
@@ -55,7 +59,7 @@ export default class extends Phaser.State {
 
         buttons.forEach((button, index) => {
             let sprite = this.buttons.create(button.x, button.y, 'item', index)
-            // this._handleInput(sprite);
+            this._handleInput(sprite);
             sprite.alpha = 0;
         });
     }
@@ -63,9 +67,9 @@ export default class extends Phaser.State {
     _handleInput(sprite) {
         sprite.inputEnabled = true;
         sprite.input.start(0, true);
-        sprite.events.onInputDown.add(select);
-        sprite.events.onInputUp.add(release);
-        sprite.events.onInputOut.add(moveOff);
+        sprite.events.onInputDown.add(this._select, this);
+        sprite.events.onInputUp.add(this._release, this);
+        sprite.events.onInputOut.add(this._moveOff, this);
     }
 
     _playIntro() {
@@ -94,68 +98,50 @@ export default class extends Phaser.State {
         this.timeCheck = this.game.time.now;
         this.currentCount++;
     }
+
+    _select(item, pointer) {
+        if(!this.simonSez && !this.intro && !this.loser && !this.winner)
+            item.alpha = 1;
+    }
+
+    _release(item, pointer) {
+        if(!this.simonSez && !this.intro && !this.loser && !this.winner) {
+            item.alpha = .25;
+            this._playerSequence(item);
+        }
+    }
+
+    _moveOff(item, pointer) {
+        if(!this.simonSez && !this.intro && !this.loser && !this.winner)
+            item.alpha = .25;
+    }
+
+    _playerSequence(selected) {
+        let correctButton = this.sequenceList[this.userCount];
+        let button = this.buttons.getIndex(selected);
+        this.userCount++;
+
+        if(button == correctButton) {
+            if(this.userCount == this.N) {
+                if(this.N == this.sequenceCount) {
+                    this.winner = true;
+                } else {
+                    this.userCount = 0;
+                    this.currentCount = 0;
+                    this.N++;
+                    this.simonSez = true;
+                }
+            }
+            this.score += 1;
+        } else {
+            this.loser = true;
+        }
+
+    }
 }
 
-// function playerSequence(selected) {
 
-//     correctSquare = this.sequenceList[userCount];
-//     userCount++;
-//     thisSquare = this.buttons.getIndex(selected);
 
-//     if (thisSquare == correctSquare)
-//     {
-//         if (userCount == this.N)
-//         {
-//             if (this.N == this.sequenceCount)
-//             {
-//                 winner = true;
-//                 //setTimeout(function(){restart();}, 3000);
-//             }
-//             else
-//             {
-//                 userCount = 0;
-//                 this.currentCount = 0;
-//                 this.N++;
-//                 this.simonSez = true;
-//             }
-//         }
-//         score += 1;
-//         scoreText.text = 'Score: ' + score + '/3';
-//     }
-//     else
-//     {
-//         loser = true;
-//         //setTimeout(function(){restart();}, 3000);
-//     }
-
-// }
-
-// function select(item, pointer) {
-
-//     if (!this.simonSez && !this.intro && !loser && !winner)
-//     {
-//         item.alpha = 1;
-//     }
-
-// }
-
-// function release(item, pointer) {
-
-//     if (!this.simonSez && !this.intro && !loser && !winner)
-//     {
-//         item.alpha = .25;
-//         playerSequence(item);
-//     }
-// }
-
-// function moveOff(item, pointer) {
-
-//     if (!this.simonSez && !this.intro && !loser && !winner)
-//     {
-//         item.alpha = .25;
-//     }
-
-// }
 
 // function render() {
 
@@ -177,7 +163,7 @@ export default class extends Phaser.State {
 //         game.debug.text('Get Ready', 360, 96, 'rgb(0,0,255)');
 //     }
 
-//     if (winner)
+//     if (this.winner)
 //     {
 //         game.debug.text('You Win!', 360, 62, 'rgb(0,0,255)');
 
@@ -185,7 +171,7 @@ export default class extends Phaser.State {
 //         scoreText.text = 'FINAL Score: ' + score + '/3';
 
 //     }
-//     else if (loser)
+//     else if (this.loser)
 //     {
 //         game.debug.text('You Lose!', 360, 62, 'rgb(0,0,255)');
 
@@ -194,9 +180,3 @@ export default class extends Phaser.State {
 //     }
 
 // }
-
-// var userCount = 0;
-// var winner;
-// var loser;
-
-// var score = 0;
