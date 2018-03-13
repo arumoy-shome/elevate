@@ -10,6 +10,7 @@ export default class extends Phaser.State {
         this.litButton = 0;
         this.currentCount = 0;
         this.timeCheck = 0;
+        this.N = 0;
     }
 
     preload() {
@@ -28,6 +29,25 @@ export default class extends Phaser.State {
             this._simonSequence();
             this.intro = false;
         }, 6000);
+    }
+
+    update() {
+        if(this.simonSez) {
+            if(this.game.time.now - this.timeCheck > 700-this.N*40) {
+                this.buttons.getAt(this.litButton).alpha = .25;
+                game.paused = true;
+
+                setTimeout(() => {
+                    if(this.currentCount < this.N) {
+                        this.game.paused = false;
+                        this._simonSequence();
+                    } else {
+                        this.simonSez = false;
+                        game.paused = false;
+                    }
+                }, 400 - this.N * 20);
+            }
+        }
     }
 
     _loadLevel(buttons) {
@@ -75,43 +95,18 @@ export default class extends Phaser.State {
         this.currentCount++;
     }
 }
-// function update() {
-
-//     if (this.simonSez)
-//     {
-//         if (game.time.now - this.timeCheck >700-N*40)
-//         {
-//             simon.getAt(this.litButton).alpha = .25;
-//             game.paused = true;
-
-//             setTimeout(function()
-//             {
-//                 if ( this.currentCount< N)
-//                 {
-//                     game.paused = false;
-//                     simonSequence();
-//                 }
-//                 else
-//                 {
-//                     this.simonSez = false;
-//                     game.paused = false;
-//                 }
-//             }, 400 - N * 20);
-//         }
-//     }
-// }
 
 // function playerSequence(selected) {
 
 //     correctSquare = this.sequenceList[userCount];
 //     userCount++;
-//     thisSquare = simon.getIndex(selected);
+//     thisSquare = this.buttons.getIndex(selected);
 
 //     if (thisSquare == correctSquare)
 //     {
-//         if (userCount == N)
+//         if (userCount == this.N)
 //         {
-//             if (N == this.sequenceCount)
+//             if (this.N == this.sequenceCount)
 //             {
 //                 winner = true;
 //                 //setTimeout(function(){restart();}, 3000);
@@ -120,7 +115,7 @@ export default class extends Phaser.State {
 //             {
 //                 userCount = 0;
 //                 this.currentCount = 0;
-//                 N++;
+//                 this.N++;
 //                 this.simonSez = true;
 //             }
 //         }
@@ -132,14 +127,6 @@ export default class extends Phaser.State {
 //         loser = true;
 //         //setTimeout(function(){restart();}, 3000);
 //     }
-
-// }
-
-// function simonSequence () {
-
-// }
-
-// function setUp() {
 
 // }
 
@@ -208,7 +195,6 @@ export default class extends Phaser.State {
 
 // }
 
-// var N = 3;
 // var userCount = 0;
 // var winner;
 // var loser;
