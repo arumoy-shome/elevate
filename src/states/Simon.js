@@ -5,12 +5,11 @@ export default class extends Phaser.State {
     preload() {
         this.game.load.spritesheet('item', 'assets/images/simon/number-buttons.png', 160, 160);
     }
+    
+    create() {
+        this.game.add.image(0, 0, 'background');
+    }
 }
-// function preload() {
-
-//     game.load.spritesheet('item', 'assets/buttons/number-buttons.png', 160, 160);
-//     game.load.image('sky', 'assets/buttons/sky.png');
-// }
 
 // var simon;
 // var N = 3;
@@ -29,13 +28,6 @@ export default class extends Phaser.State {
 // var scoreText;
 
 // function create() {
-
-//     this.scale.pageAlignHorizontally = true;
-//     this.scale.pageAlignVertically = true;
-//     this.scale.setScreenSize(true);
-
-//     //  A simple background for our game
-//     bg = game.add.sprite(0, 0, 'sky'); 
 
 //     simon = game.add.group();
 //     var item;
