@@ -4,8 +4,12 @@ import config from '../config'
 export default class extends Phaser.State {
     init() {
         this.intro = false;
+        this.simonSez = false;
         this.sequenceCount = 3;
         this.sequenceList = [];
+        this.litButton = 0;
+        this.currentCount = 0;
+        this.timeCheck = 0;
     }
 
     preload() {
@@ -20,7 +24,10 @@ export default class extends Phaser.State {
         this._loadLevel(this.data.buttons);
         this._playIntro();
         this._setSequence();
-        //     setTimeout(function(){simonSequence(); intro = false;}, 6000);
+        setTimeout(() => {
+            this._simonSequence();
+            this.intro = false;
+        }, 6000);
     }
 
     _loadLevel(buttons) {
@@ -59,26 +66,34 @@ export default class extends Phaser.State {
             this.sequenceList.push(button);
         }
     }
+
+    _simonSequence() {
+        this.simonSez = true;
+        this.litButton = this.sequenceList[this.currentCount];
+        this.buttons.getAt(this.litButton).alpha = 1;
+        this.timeCheck = this.game.time.now;
+        this.currentCount++;
+    }
 }
 // function update() {
 
-//     if (simonSez)
+//     if (this.simonSez)
 //     {
-//         if (game.time.now - timeCheck >700-N*40)
+//         if (game.time.now - this.timeCheck >700-N*40)
 //         {
-//             simon.getAt(litSquare).alpha = .25;
+//             simon.getAt(this.litButton).alpha = .25;
 //             game.paused = true;
 
 //             setTimeout(function()
 //             {
-//                 if ( currentCount< N)
+//                 if ( this.currentCount< N)
 //                 {
 //                     game.paused = false;
 //                     simonSequence();
 //                 }
 //                 else
 //                 {
-//                     simonSez = false;
+//                     this.simonSez = false;
 //                     game.paused = false;
 //                 }
 //             }, 400 - N * 20);
@@ -88,7 +103,7 @@ export default class extends Phaser.State {
 
 // function playerSequence(selected) {
 
-//     correctSquare = sequenceList[userCount];
+//     correctSquare = this.sequenceList[userCount];
 //     userCount++;
 //     thisSquare = simon.getIndex(selected);
 
@@ -96,7 +111,7 @@ export default class extends Phaser.State {
 //     {
 //         if (userCount == N)
 //         {
-//             if (N == sequenceCount)
+//             if (N == this.sequenceCount)
 //             {
 //                 winner = true;
 //                 //setTimeout(function(){restart();}, 3000);
@@ -104,9 +119,9 @@ export default class extends Phaser.State {
 //             else
 //             {
 //                 userCount = 0;
-//                 currentCount = 0;
+//                 this.currentCount = 0;
 //                 N++;
-//                 simonSez = true;
+//                 this.simonSez = true;
 //             }
 //         }
 //         score += 1;
@@ -122,12 +137,6 @@ export default class extends Phaser.State {
 
 // function simonSequence () {
 
-//     simonSez = true;
-//     litSquare = sequenceList[currentCount];
-//     simon.getAt(litSquare).alpha = 1;
-//     timeCheck = game.time.now;
-//     currentCount++;
-
 // }
 
 // function setUp() {
@@ -136,7 +145,7 @@ export default class extends Phaser.State {
 
 // function select(item, pointer) {
 
-//     if (!simonSez && !intro && !loser && !winner)
+//     if (!this.simonSez && !this.intro && !loser && !winner)
 //     {
 //         item.alpha = 1;
 //     }
@@ -145,7 +154,7 @@ export default class extends Phaser.State {
 
 // function release(item, pointer) {
 
-//     if (!simonSez && !intro && !loser && !winner)
+//     if (!this.simonSez && !this.intro && !loser && !winner)
 //     {
 //         item.alpha = .25;
 //         playerSequence(item);
@@ -154,7 +163,7 @@ export default class extends Phaser.State {
 
 // function moveOff(item, pointer) {
 
-//     if (!simonSez && !intro && !loser && !winner)
+//     if (!this.simonSez && !this.intro && !loser && !winner)
 //     {
 //         item.alpha = .25;
 //     }
@@ -165,9 +174,9 @@ export default class extends Phaser.State {
 
 //     game.debug.text('Follow the instructions to select your grocery list.', 10, 32, 'rgb(0,0,255)');
 
-//     if (!intro)
+//     if (!this.intro)
 //     {
-//         if (simonSez)
+//         if (this.simonSez)
 //         {
 //             game.debug.text('Pick the following groceries', 300, 96, 'rgb(255,0,0)');
 //         }
@@ -201,12 +210,7 @@ export default class extends Phaser.State {
 
 // var N = 3;
 // var userCount = 0;
-// var currentCount = 0;
-// var simonSez = false;
-// var timeCheck;
-// var litSquare;
 // var winner;
 // var loser;
-// var intro;
 
 // var score = 0;
