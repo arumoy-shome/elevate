@@ -4,6 +4,8 @@ import config from '../config'
 export default class extends Phaser.State {
     init() {
         this.intro = false;
+        this.sequenceCount = 3;
+        this.sequenceList = [];
     }
 
     preload() {
@@ -17,7 +19,7 @@ export default class extends Phaser.State {
 
         this._loadLevel(this.data.buttons);
         this._playIntro();
-        //     setUp();
+        this._setSequence();
         //     setTimeout(function(){simonSequence(); intro = false;}, 6000);
     }
 
@@ -48,6 +50,13 @@ export default class extends Phaser.State {
 
             flashing.chain(final);
             flashing.start();
+        }
+    }
+
+    _setSequence() {
+        for (var i = 0; i < this.sequenceCount; i++) {
+            let button = this.game.rnd.integerInRange(0,5);
+            this.sequenceList.push(button);
         }
     }
 }
@@ -123,13 +132,6 @@ export default class extends Phaser.State {
 
 // function setUp() {
 
-//     // This will set a ranmon sequence of 3 numbers (since sequenceCount is set to 3) of numbers betweem 0,5 (since 6 tiles)
-//     for (var i = 0; i < sequenceCount; i++)
-//     {
-//         thisSquare = game.rnd.integerInRange(0,5);
-//         sequenceList.push(thisSquare);
-//     }
-
 // }
 
 // function select(item, pointer) {
@@ -197,12 +199,9 @@ export default class extends Phaser.State {
 
 // }
 
-// var simon;
 // var N = 3;
 // var userCount = 0;
 // var currentCount = 0;
-// var sequenceCount = 3;
-// var sequenceList = [];
 // var simonSez = false;
 // var timeCheck;
 // var litSquare;
@@ -211,4 +210,3 @@ export default class extends Phaser.State {
 // var intro;
 
 // var score = 0;
-// var scoreText;
