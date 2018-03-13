@@ -3,11 +3,14 @@ import config from '../config'
 
 export default class extends Phaser.State {
     preload() {
+        this.game.load.json('simon','data/simon/simon.json');
         this.game.load.spritesheet('item', 'assets/images/simon/number-buttons.png', 160, 160);
     }
-    
+
     create() {
         this.game.add.image(0, 0, 'background');
+
+        this.data = this.game.cache.getJSON('simon');
     }
 }
 
@@ -81,7 +84,7 @@ export default class extends Phaser.State {
 // // }
 
 // function introTween() {
-//     // This will flash the 6 tiles 
+//     // This will flash the 6 tiles
 //     intro = true;
 
 //     for (var i = 0; i < 6; i++)
