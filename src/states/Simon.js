@@ -9,57 +9,31 @@ export default class extends Phaser.State {
 
     create() {
         this.game.add.image(0, 0, 'background');
-
         this.data = this.game.cache.getJSON('simon');
+
+        this._loadLevel(this.data.buttons);
+    }
+
+    _loadLevel(buttons) {
+        this.buttons = this.game.add.group();
+
+        buttons.forEach((button, index) => {
+            let sprite = this.buttons.create(button.x, button.y, 'item', index)
+            // this._handleInput(sprite);
+            // sprite.alpha = 0;
+        });
+    }
+
+    _handleInput(sprite) {
+        sprite.inputEnabled = true;
+        sprite.input.start(0, true);
+        sprite.events.onInputDown.add(select);
+        sprite.events.onInputUp.add(release);
+        sprite.events.onInputOut.add(moveOff);
     }
 }
 
-// var simon;
-// var N = 3;
-// var userCount = 0;
-// var currentCount = 0;
-// var sequenceCount = 3;
-// var sequenceList = [];
-// var simonSez = false;
-// var timeCheck;
-// var litSquare;
-// var winner;
-// var loser;
-// var intro;
-
-// var score = 0;
-// var scoreText;
-
 // function create() {
-
-//     simon = game.add.group();
-//     var item;
-
-//     for (var i = 0; i < 3; i++)
-//     {
-//         // Adds the 3 items in the first row to simon group
-//         item = simon.create(150 + 168 * i, 150, 'item', i);
-//         // Enable input.
-//         item.inputEnabled = true;
-//         item.input.start(0, true);
-//         item.events.onInputDown.add(select);
-//         item.events.onInputUp.add(release);
-//         item.events.onInputOut.add(moveOff);
-//         simon.getAt(i).alpha = 0;
-//     }
-
-//     for (var i = 0; i < 3; i++)
-//     {
-//         // Adds the 3 items in the second row to simon group
-//         item = simon.create(150 + 168 * i, 318, 'item', i + 3);
-//         // Enable input.
-//         item.inputEnabled = true;
-//         item.input.start(0, true);
-//         item.events.onInputDown.add(select);
-//         item.events.onInputUp.add(release);
-//         item.events.onInputOut.add(moveOff);
-//         simon.getAt(i + 3).alpha = 0;
-//     }
 
 //     scoreText = game.add.text(16, 40, 'Score: 0/3', { fontSize: '32px', fill: '#000' });
 
@@ -243,3 +217,19 @@ export default class extends Phaser.State {
 //     }
 
 // }
+
+// var simon;
+// var N = 3;
+// var userCount = 0;
+// var currentCount = 0;
+// var sequenceCount = 3;
+// var sequenceList = [];
+// var simonSez = false;
+// var timeCheck;
+// var litSquare;
+// var winner;
+// var loser;
+// var intro;
+
+// var score = 0;
+// var scoreText;
