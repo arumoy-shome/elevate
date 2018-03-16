@@ -10,7 +10,7 @@ export default class extends Phaser.State {
         this.litButton = 0;
         this.currentCount = 0;
         this.timeCheck = 0;
-        this.N = 1;
+        this.N = 3;
         this.userCount = 0;
         this.score = 0;
         this.winner = false;
