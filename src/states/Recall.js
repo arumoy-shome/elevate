@@ -34,8 +34,29 @@ export default class extends Phaser.State {
 
         buttons.forEach((button, index) => {
             let sprite = this.buttons.create(button.x, button.y, 'item', index)
-            // this._handleInput(sprite);
+            this._handleInput(sprite);
             sprite.alpha = 0.35;
         });
+    }
+
+    _handleInput(sprite) {
+        sprite.inputEnabled = true;
+        sprite.input.start(0, true);
+        sprite.events.onInputDown.add(this._select, this);
+        sprite.events.onInputUp.add(this._release, this);
+        sprite.events.onInputOut.add(this._moveOff, this);
+    }
+
+    _select(item, pointer) {
+        item.alpha = 1;
+    }
+
+    _release(item, pointer) {
+        item.alpha = .35;
+        // this._playerSequence.append(item);
+    }
+
+    _moveOff(item, pointer) {
+        item.alpha = .35;
     }
 }
