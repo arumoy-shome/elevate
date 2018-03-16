@@ -67,7 +67,7 @@ export default class extends Phaser.State {
         if(this.winner)
             game.debug.text('YOU WON!', 420, 15, 'rgb(0,0,255)');
         else if (this.loser)
-            game.debug.text('YOU LOST!', 360, 62, 'rgb(0,0,255)');
+            game.debug.text('YOU LOST!', 360, 15, 'rgb(0,0,255)');
     }
 
     _addInstructions() {
