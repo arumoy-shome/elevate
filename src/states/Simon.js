@@ -19,7 +19,7 @@ export default class extends Phaser.State {
 
     preload() {
         this.game.load.json('simon','data/simon/simon.json');
-        this.game.load.spritesheet('item', 'assets/images/simon/number-buttons.png', 160, 160);
+        this.game.load.spritesheet('item', 'assets/images/simon/grocery-list.jpg', 160, 160);
     }
 
     create() {
