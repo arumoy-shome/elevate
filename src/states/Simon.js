@@ -139,6 +139,9 @@ export default class extends Phaser.State {
             if(this.userCount == this.N) {
                 if(this.N == this.sequenceCount) {
                     this.winner = true;
+                    setTimeout(() => {
+                        this.game.state.start('CandyCatch', true, false, { level: 0 });
+                    }, 2000);
                 } else {
                     this.userCount = 0;
                     this.currentCount = 0;
@@ -150,6 +153,9 @@ export default class extends Phaser.State {
             console.log(`score: ${this.score}`);
         } else {
             this.loser = true;
+            setTimeout(() => {
+                this.game.state.start('CandyCatch', true, false, { level: 0 });
+            }, 2000);
         }
     }
 }
