@@ -153,7 +153,6 @@ export default class extends Phaser.State {
         this.game.physics.arcade.overlap(this.hero, this.coins, (hero, coin) => {
             this.sfx.coin.play();
             coin.kill();
-            console.log(this.score++);
         });
         this.game.physics.arcade.overlap(this.hero, this.spiders, (hero, spider) => {
             if(hero.body.velocity.y > 0) {
