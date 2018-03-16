@@ -23,7 +23,7 @@ export default class extends Phaser.State {
     }
 
     create() {
-        this.game.add.image(0, 0, 'background');
+        this.game.stage.backgroundColor = "#f2f2f2";
         this.data = this.game.cache.getJSON('simon');
 
         this._addInstructions();
