@@ -16,6 +16,7 @@ export default class extends Phaser.State {
         this.data = this.game.cache.getJSON('simon');
 
         this._addInstructions();
+        this._loadLevel(this.data.buttons);
     }
 
     _addInstructions() {
@@ -26,5 +27,15 @@ export default class extends Phaser.State {
                       align: "center" };
         let text = 'Do you still remember the grocery items you need?';
         this.game.add.text(25, 25, text, style);
+    }
+
+    _loadLevel(buttons) {
+        this.buttons = this.game.add.group();
+
+        buttons.forEach((button, index) => {
+            let sprite = this.buttons.create(button.x, button.y, 'item', index)
+            // this._handleInput(sprite);
+            sprite.alpha = 0.35;
+        });
     }
 }
