@@ -28,7 +28,6 @@ export default class extends Phaser.State {
 
         this._addInstructions();
         this._loadLevel(this.data.buttons);
-        // this._playIntro();
         this._setSequence();
         setTimeout(() => {
             this._simonSequence();
@@ -97,18 +96,6 @@ export default class extends Phaser.State {
         sprite.events.onInputDown.add(this._select, this);
         sprite.events.onInputUp.add(this._release, this);
         sprite.events.onInputOut.add(this._moveOff, this);
-    }
-
-    _playIntro() {
-        for (let i = 0; i < 6; i++) {
-            let flashing = game.add.tween(this.buttons.getAt(i)).
-                to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 4, true);
-            let final = game.add.tween(this.buttons.getAt(i)).
-                to( { alpha: .25 }, 500, Phaser.Easing.Linear.None, true);
-
-            flashing.chain(final);
-            flashing.start();
-        }
     }
 
     _setSequence() {
