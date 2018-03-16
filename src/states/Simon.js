@@ -38,7 +38,7 @@ export default class extends Phaser.State {
     update() {
         if(this.simonSez) {
             if(this.game.time.now - this.timeCheck > 700-this.N*40) {
-                this.buttons.getAt(this.litButton).alpha = .25;
+                this.buttons.getAt(this.litButton).alpha = .35;
                 game.paused = true;
 
                 setTimeout(() => {
