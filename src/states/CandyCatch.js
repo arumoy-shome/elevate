@@ -74,7 +74,7 @@ export default class extends Phaser.State {
         this.candies = this.game.add.group();
         this._spawnCandies(data.candies);
 
-        const GRAVITY = 100;
+        const GRAVITY = 50;
         this.game.physics.arcade.gravity.y = GRAVITY;
     }
 
@@ -104,6 +104,7 @@ export default class extends Phaser.State {
         let sprite = this.candies.create(dropPos, dropOffset[candyIndex], 'candy');
         sprite.value = candyValue;
         sprite.anchor.set(0.5, 0.5);
+        sprite.scale.setTo(1.5, 1.5);
         this.game.physics.enable(sprite);
         sprite.animations.add('type', [candyIndex], 10, true);
         sprite.animations.play('type');
