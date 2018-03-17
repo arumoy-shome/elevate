@@ -7,6 +7,9 @@ export default class extends Phaser.State {
     }
 
     preload() {
+        this.game.scale.pageAlignHorizontally = true;
+        this.game.scale.pageAlignVertically = true;
+
         this.game.load.image('background', 'assets/images/platform/background.png');
 		this.game.load.spritesheet('button-start', 'assets/images/candy-catch/button-start.png', 401, 143);
     }
