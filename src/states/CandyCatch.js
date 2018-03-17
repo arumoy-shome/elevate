@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import config from '../config';
+import _ from 'lodash';
 
 const TWO_SEC = 2000;
 
@@ -43,9 +44,6 @@ export default class extends Phaser.State {
         this.elapsedTime += this.game.time.elapsed;
         this.spawnCandyTimer += this.game.time.elapsed;
 
-        this._handleInput();
-        this._handleCollisions();
-
         if(this.spawnCandyTimer > TWO_SEC) {
             this.spawnCandyTimer = 0;
             this._spawnCandies(this.levelDetails.candies);
@@ -62,7 +60,11 @@ export default class extends Phaser.State {
     }
 
     _setupMetrics() {
-        this.data.metrics.candyCatch = this.data.metrics.candyCatch || { score: 0 };
+        this.data.metrics.candyCatch = this.data.metrics.candyCatch || {
+            finalScore: 0,
+            score: [],
+            collection: []
+        };
     }
 
     _addQuestion() {
@@ -76,7 +78,6 @@ export default class extends Phaser.State {
 
     _loadLevel(data) {
         this._spawnPlatforms(data.platforms);
-        this._spawnHero(data.hero);
 
         this.candies = this.game.add.group();
 
@@ -95,11 +96,6 @@ export default class extends Phaser.State {
         });
     }
 
-    _spawnHero(hero) {
-        this.hero = new Hero(this.game,hero.x, hero.y);
-        this.game.add.existing(this.hero);
-    }
-
     _spawnCandies(candies) {
         let dropPos = Math.floor(Math.random()*config.default.width);
         let dropOffset = [-27,-36,-36,-38,-48];
@@ -110,11 +106,12 @@ export default class extends Phaser.State {
         let sprite = this.candies.create(dropPos, dropOffset[candyIndex], 'candy');
         sprite.value = candyValue;
         sprite.anchor.set(0.5, 0.5);
-        sprite.scale.setTo(1.5, 1.5);
+        sprite.scale.setTo(1.2, 1.2);
         this.game.physics.enable(sprite);
         sprite.animations.add('type', [candyIndex], 10, true);
         sprite.animations.play('type');
         this._addCandyText(sprite);
+        this._handleInput(sprite);
     }
 
     _addCandyText(sprite) {
@@ -127,84 +124,39 @@ export default class extends Phaser.State {
         sprite.addChild(text);
     }
 
-    _handleInput() {
-        if(this.keys.left.isDown) {
-            this.hero.move(-1);
-        } else if(this.keys.right.isDown) {
-            this.hero.move(1);
+    _handleInput(sprite) {
+        sprite.inputEnabled = true;
+        sprite.input.start(0, true);
+        sprite.events.onInputDown.add(this._select, this);
+    }
+
+    _select(item, pointer) {
+        this.sfx.candy.play();
+        item.kill();
+        this.data.metrics.candyCatch.collection.push(item.value);
+        this.heroVsCandyCount++;
+
+        if(this._scored())
+            this.data.metrics.candyCatch.score.push(1);
+        else
+            this.data.metrics.candyCatch.score.push(0);
+
+        if(this.data.level === 4) {
+            this.data.metrics.candyCatch.finalScore = _.sum(this.data.metrics.candyCatch.score);
+            this.game.state.start('Recall', true, false, this.data)
         } else {
-            this.hero.move(0);
+            this._startNextLevel();
         }
     }
 
-    _handleCollisions() {
-        this.game.physics.arcade.collide(this.hero, this.platforms);
-        this.game.physics.arcade.overlap(this.hero, this.candies, (hero, candy) => {
-            this.sfx.candy.play();
-            candy.kill();
-            hero.collections.push(candy.value);
-            this.heroVsCandyCount++;
-
-            if(this._scored(hero)) { this.data.metrics.candyCatch.score = 1; }
-
-            if(hero.collections[hero.collections.length-1] === this.levelDetails.rightAnswer) {
-                if(this.data.level === 4) {
-                    this.game.state.start('Recall', true, false, this.data)
-                } else {
-                    this._handleWinState();
-                }
-            }
-        });
-    }
-
-    _scored(hero) {
+    _scored() {
+        let collection = this.data.metrics.candyCatch.collection
         return (this.heroVsCandyCount === 1 &&
-                hero.collections[hero.collections.length-1] === this.levelDetails.rightAnswer);
+                collection[collection.length-1] === this.levelDetails.rightAnswer);
     }
 
-    _handleWinState() {
+    _startNextLevel() {
         this.data.level++;
         this.game.state.restart(true, false, this.data);
-    }
-}
-
-class Hero extends Phaser.Sprite {
-    constructor(game, x, y) {
-        super(game, x, y, 'hero');
-        this.anchor.set(0.5, 0.5);
-        this.game.physics.enable(this);
-        this.body.collideWorldBounds = true;
-        this.animations.add('stop', [0]);
-        this.animations.add('run', [1, 2], 8, true);
-        this.collections = [];
-    }
-
-    move(direction) {
-        const SPEED = 200;
-        this.body.velocity.x = direction * SPEED;
-
-        if(this.body.velocity.x < 0) {
-            this.scale.x = -1;
-        } else if(this.body.velocity.x > 0) {
-            this.scale.x = 1;
-        }
-    }
-
-    update() {
-        let animation = this._getAnimation();
-
-        if(this.animations.name != animation) {
-            this.animations.play(animation);
-        }
-    }
-
-    _getAnimation() {
-        let name = 'stop';
-
-        if(this.body.velocity.x != 0 && this.body.touching.down) {
-            name = 'run';
-        }
-
-        return name;
     }
 }
