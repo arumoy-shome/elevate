@@ -2,7 +2,6 @@ import 'pixi';
 import 'p2';
 import Phaser from 'phaser';
 
-import Boot from './states/Boot';
 import MainMenu from './states/MainMenu';
 import Simon from './states/Simon';
 import Platform from './states/Platform';
@@ -15,7 +14,6 @@ class Game extends Phaser.Game {
     constructor () {
         super(config.default.width, config.default.height, Phaser.CANVAS, 'content', null);
 
-        this.state.add('Boot', Boot, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('Simon', Simon, false);
         this.state.add('Platform', Platform, false);
