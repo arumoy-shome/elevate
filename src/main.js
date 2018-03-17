@@ -12,7 +12,7 @@ import config from './config';
 
 class Game extends Phaser.Game {
     constructor () {
-        super(config.default.width, config.default.height, Phaser.CANVAS, 'content', null);
+        super(config.width, config.height, Phaser.CANVAS, 'content', null);
 
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('Simon', Simon, false);
