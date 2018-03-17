@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import config from '../config';
+import _ from 'lodash';
 
 export default class extends Phaser.State {
     init(data) {
@@ -18,6 +18,15 @@ export default class extends Phaser.State {
 
         this._addInstructions();
         this._loadLevel(this.data.buttons);
+    }
+
+    render() {
+        if(this.playerSequence.length === 3) {
+            if(this._rightSequence())
+                this.game.debug.text('YOU WON!', 420, 15, 'rgb(0,0,255)')
+            else
+                game.debug.text('YOU LOST!', 360, 15, 'rgb(0,0,255)');
+        }
     }
 
     _addInstructions() {
@@ -59,5 +68,9 @@ export default class extends Phaser.State {
 
     _moveOff(item, pointer) {
         item.alpha = .35;
+    }
+
+    _rightSequence() {
+        return _.isEqual(this.playerSequence, this.simonSequence);
     }
 }
