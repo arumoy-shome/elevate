@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
+import StartButton from '../sprites/StartButton';
 
 const ONE_SEC = 1000;
-const HALF_SEC = 500;
+const QUARTER_SEC = 250;
 const SEQUENCE_COUNT = 3;
 
 export default class extends Phaser.State {
@@ -22,10 +23,13 @@ export default class extends Phaser.State {
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";
         this.levelDetails = this.game.cache.getJSON('simon');
+        let button = new StartButton(this.game, this._startState, this)
 
         this._addInstructions();
         this._loadLevel(this.levelDetails.buttons);
         this._setSequence();
+        this.game.paused = true;
+        this.game.add.existing(button);
     }
 
     update() {
@@ -50,8 +54,9 @@ export default class extends Phaser.State {
         }
     }
 
-    render() {
-        this._getReady();
+    _startState(button) {
+        this.game.paused = false;
+        button.kill();
     }
 
     _setupMetrics() {
@@ -101,9 +106,9 @@ export default class extends Phaser.State {
     _highlightButton(index) {
         let button = this.buttons.getAt(index);
         let selectTween = this.game.add.tween(button).
-            to({ alpha: 1 }, HALF_SEC, "Linear", false);
+            to({ alpha: 1 }, QUARTER_SEC, "Linear", false);
         let releaseTween = this.game.add.tween(button).
-            to({ alpha: 0.35 }, HALF_SEC, "Linear", false);
+            to({ alpha: 0.35 }, QUARTER_SEC, "Linear", false);
 
         selectTween.chain(releaseTween);
         selectTween.start();
@@ -136,7 +141,3 @@ export default class extends Phaser.State {
         return this.playerSequence.length === SEQUENCE_COUNT;
     }
 }
-
-
-
-
