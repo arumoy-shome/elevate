@@ -41,8 +41,7 @@ export default class extends Phaser.State {
                 if(this.simonSequence[index] === button)
                     this.metrics.simon.score += 1;
                 else {
-                    console.log(this.metrics.simon.score);
-                    this.game.paused = true;
+                    this.game.state.start('CandyCatch', true, false, this.metrics)
                 }
             });
         }
