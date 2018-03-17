@@ -27,8 +27,7 @@ export default class extends Phaser.State {
             if(this._rightSequence()) {
                 this.data.metrics.recall.score++;
             }
-            console.log(this.data);
-            this.game.paused = true;
+            this.game.state.start('LeaderBoard', true, false, this.data);
         }
     }
 
