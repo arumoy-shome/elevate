@@ -7,11 +7,11 @@ const SEQUENCE_COUNT = 3;
 
 export default class extends Phaser.State {
     init(metrics) {
-        this.metrics = metrics || {};
+        this._setupMetrics(metrics);
         this.elapsedTime = 0;
         this.simonSequence = [];
+        this.playerSequence = [];
         this.simonSequenceIndex = 0;
-        this.N = 3;
     }
 
     preload() {
@@ -39,6 +39,13 @@ export default class extends Phaser.State {
 
     render() {
         this._getReady();
+    }
+
+    _setupMetrics(metrics) {
+        this.metrics = metrics || {};
+        this.metrics.simon = {
+            score: 0
+        };
     }
 
     _getReady() {
