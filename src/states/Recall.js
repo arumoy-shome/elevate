@@ -4,6 +4,7 @@ import config from '../config';
 export default class extends Phaser.State {
     init(data) {
         this.simonSequence = data.simonSequence || [];
+        this.playerSequence = [];
     }
 
     preload() {
@@ -53,7 +54,7 @@ export default class extends Phaser.State {
 
     _release(item, pointer) {
         item.alpha = .35;
-        // this._playerSequence.append(item);
+        this.playerSequence.push(this.buttons.getIndex(item));
     }
 
     _moveOff(item, pointer) {
