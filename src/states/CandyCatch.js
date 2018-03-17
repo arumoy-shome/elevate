@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import config from '../config';
 
+const TWO_SEC = 2000;
 
 export default class extends Phaser.State {
     init(data) {
@@ -40,20 +41,28 @@ export default class extends Phaser.State {
 
     update() {
         this.elapsedTime += this.game.time.elapsed;
-        this.spawnCandyTimer += this.time.elapsed;
+        this.spawnCandyTimer += this.game.time.elapsed;
 
         this._handleInput();
         this._handleCollisions();
 
-        if(this.spawnCandyTimer > 1000) {
+        if(this.spawnCandyTimer > TWO_SEC) {
             this.spawnCandyTimer = 0;
             this._spawnCandies(this.levelDetails.candies);
         }
     }
 
+    render() {
+        this._getReady();
+    }
+
+    _getReady() {
+        if(this.elapsedTime < TWO_SEC)
+            this.game.debug.text('GET READY', 420, 95, 'rgb(0,0,255)');
+    }
+
     _setupMetrics() {
         this.data.metrics.candyCatch = this.data.metrics.candyCatch || { score: 0 };
-        console.log(this.data);
     }
 
     _addQuestion() {
@@ -70,7 +79,6 @@ export default class extends Phaser.State {
         this._spawnHero(data.hero);
 
         this.candies = this.game.add.group();
-        this._spawnCandies(data.candies);
 
         const GRAVITY = 50;
         this.game.physics.arcade.gravity.y = GRAVITY;
