@@ -3,7 +3,9 @@ import _ from 'lodash';
 
 export default class extends Phaser.State {
     init(data) {
-        this.simonSequence = data.simonSequence || [];
+        this.data = data;
+        this._setupMetrics();
+        this.simonSequence = data.simonSequence;
         this.playerSequence = [];
     }
 
@@ -14,19 +16,25 @@ export default class extends Phaser.State {
 
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";
-        this.data = this.game.cache.getJSON('simon');
+        this.levelDetails = this.game.cache.getJSON('simon');
 
         this._addInstructions();
-        this._loadLevel(this.data.buttons);
+        this._loadLevel(this.levelDetails.buttons);
     }
 
     render() {
         if(this.playerSequence.length === 3) {
-            if(this._rightSequence())
-                this.game.debug.text('YOU WON!', 420, 15, 'rgb(0,0,255)')
-            else
-                game.debug.text('YOU LOST!', 360, 15, 'rgb(0,0,255)');
+            if(this._rightSequence()) {
+                this.data.metrics.recall.score++;
+            } else {
+                console.log('insert leader board');
+                this.game.paused = true;
+            }
         }
+    }
+
+    _setupMetrics() {
+        this.data.metrics.recall = this.data.metrics.recall || { score: 0 };
     }
 
     _addInstructions() {

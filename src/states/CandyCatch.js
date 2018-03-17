@@ -4,22 +4,15 @@ import config from '../config';
 
 export default class extends Phaser.State {
     init(data) {
+        this.data = data;
+        this._setupMetrics();
         this.keys = this.input.keyboard.addKeys({
             left: Phaser.KeyCode.LEFT,
             right: Phaser.KeyCode.RIGHT
         });
         this.spawnCandyTimer = 0;
-        this.level = (data.level || 0);
         this.heroVsCandyCount = 0;
         this.elapsedTime = 0;
-        this.export = {
-            game: "candy catch",
-            level: this.level,
-            time: 0,
-            answer: 0,
-            score: 0,
-            collection: null
-        }
     }
 
     preload() {
@@ -39,19 +32,10 @@ export default class extends Phaser.State {
     create () {
         this.game.add.image(0, 0, 'background');
         this.sfx = { candy: this.game.add.audio('sfxCandy') };
-        this.data = this.game.cache.getJSON(`catch-${this.level}`);
+        this.levelDetails = this.game.cache.getJSON(`catch-${this.data.level}`);
 
         this._addQuestion();
-        this._loadLevel(this.data);
-    }
-
-    _addQuestion() {
-        let style = { font: "40px Arial",
-                              fill: "#FFCC00",
-                              stroke: "#333",
-                              strokeThickness: 5,
-                              align: "center" };
-        this.game.add.text(120, 20, this.data.question, style);
+        this._loadLevel(this.levelDetails);
     }
 
     update() {
@@ -63,8 +47,22 @@ export default class extends Phaser.State {
 
         if(this.spawnCandyTimer > 1000) {
             this.spawnCandyTimer = 0;
-            this._spawnCandies(this.data.candies);
+            this._spawnCandies(this.levelDetails.candies);
         }
+    }
+
+    _setupMetrics() {
+        this.data.metrics.candyCatch = this.data.metrics.candyCatch || { score: 0 };
+        console.log(this.data);
+    }
+
+    _addQuestion() {
+        let style = { font: "40px Arial",
+                              fill: "#FFCC00",
+                              stroke: "#333",
+                              strokeThickness: 5,
+                              align: "center" };
+        this.game.add.text(120, 20, this.levelDetails.question, style);
     }
 
     _loadLevel(data) {
@@ -139,13 +137,11 @@ export default class extends Phaser.State {
             hero.collections.push(candy.value);
             this.heroVsCandyCount++;
 
-            if(this._scored(hero)) { this.export.score = 1; }
+            if(this._scored(hero)) { this.data.metrics.candyCatch.score = 1; }
 
-            if(hero.collections[hero.collections.length-1] === this.data.rightAnswer) {
-                if(this.level === 4) {
-                    this._exportData();
-                    this.game.add.sprite(200, 100, 'game-over');
-                    this.game.paused = true;
+            if(hero.collections[hero.collections.length-1] === this.levelDetails.rightAnswer) {
+                if(this.data.level === 4) {
+                    this.game.state.start('Recall', true, false, this.data)
                 } else {
                     this._handleWinState();
                 }
@@ -155,18 +151,12 @@ export default class extends Phaser.State {
 
     _scored(hero) {
         return (this.heroVsCandyCount === 1 &&
-                hero.collections[hero.collections.length-1] === this.data.rightAnswer);
-    }
-    _handleWinState() {
-        this._exportData();
-        this.game.state.restart(true, false, { level: this.level + 1 });
+                hero.collections[hero.collections.length-1] === this.levelDetails.rightAnswer);
     }
 
-    _exportData() {
-        this.export.time = (this.elapsedTime / 1000);
-        this.export.answer = this.data.rightAnswer;
-        this.export.collection = this.hero.collections;
-        console.log(this.export);
+    _handleWinState() {
+        this.data.level++;
+        this.game.state.restart(true, false, this.data);
     }
 }
 

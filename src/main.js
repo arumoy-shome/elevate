@@ -19,12 +19,15 @@ class Game extends Phaser.Game {
         this.state.add('Platform', Platform, false);
         this.state.add('Recall', Recall, false);
         this.state.add('CandyCatch', CandyCatch, false);
-        
-        this.score = 0;
+
+        this.data = {
+            level: 0,
+            metrics: {}
+        };
 
         // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
         if (!window.cordova) {
-            this.state.start('Boot');
+            this.state.start('MainMenu', true, false, this.data);
         }
     }
 }

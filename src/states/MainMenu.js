@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import config from '../config';
 
 export default class extends Phaser.State {
+    init(data) {
+        this.data = data;
+    }
+
     preload() {
         this.game.load.image('background', 'assets/images/platform/background.png');
 		this.game.load.spritesheet('button-start', 'assets/images/candy-catch/button-start.png', 401, 143);
@@ -17,6 +21,6 @@ export default class extends Phaser.State {
     }
     
     _startGame() {
-        this.game.state.start('Simon');
+        this.game.state.start('Simon', true, false, this.data);
     }
 }

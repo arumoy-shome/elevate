@@ -6,8 +6,9 @@ const HALF_SEC = 500;
 const SEQUENCE_COUNT = 3;
 
 export default class extends Phaser.State {
-    init(metrics) {
-        this._setupMetrics(metrics);
+    init(data) {
+        this.data = data;
+        this._setupMetrics();
         this.elapsedTime = 0;
         this.simonSequence = [];
         this.playerSequence = [];
@@ -21,10 +22,10 @@ export default class extends Phaser.State {
 
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";
-        this.data = this.game.cache.getJSON('simon');
+        this.levelDetails = this.game.cache.getJSON('simon');
 
         this._addInstructions();
-        this._loadLevel(this.data.buttons);
+        this._loadLevel(this.levelDetails.buttons);
         this._setSequence();
     }
 
@@ -39,11 +40,12 @@ export default class extends Phaser.State {
         if(this._noMoreAttempts()) {
             this.playerSequence.forEach((button, index) => {
                 if(this.simonSequence[index] === button)
-                    this.metrics.simon.score += 1;
+                    this.data.metrics.simon.score += 1;
                 else {
-                    this.game.state.start('CandyCatch', true, false, this.metrics)
+                    this.game.state.start('CandyCatch', true, false, this.data)
                 }
             });
+            this.game.state.start('CandyCatch', true, false, this.data);
         }
     }
 
@@ -51,11 +53,8 @@ export default class extends Phaser.State {
         this._getReady();
     }
 
-    _setupMetrics(metrics) {
-        this.metrics = metrics || {};
-        this.metrics.simon = {
-            score: 0
-        };
+    _setupMetrics() {
+        this.data.metrics.simon = this.data.metrics.simon || { score: 0 };
     }
 
     _getReady() {
