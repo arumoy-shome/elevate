@@ -5,7 +5,7 @@ export default class extends Phaser.State {
     init(data) {
         this.data = data;
         this._setupMetrics();
-        this.simonSequence = data.simonSequence;
+        this.simonSequence = data.metrics.simon.simonSequence;
         this.playerSequence = [];
     }
 
@@ -22,14 +22,13 @@ export default class extends Phaser.State {
         this._loadLevel(this.levelDetails.buttons);
     }
 
-    render() {
+    update() {
         if(this.playerSequence.length === 3) {
             if(this._rightSequence()) {
                 this.data.metrics.recall.score++;
-            } else {
-                console.log('insert leader board');
-                this.game.paused = true;
             }
+            console.log(this.data);
+            this.game.paused = true;
         }
     }
 

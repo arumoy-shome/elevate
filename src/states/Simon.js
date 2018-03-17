@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import config from '../config'
 
 const ONE_SEC = 1000;
 const HALF_SEC = 500;
@@ -38,6 +37,8 @@ export default class extends Phaser.State {
         }
 
         if(this._noMoreAttempts()) {
+            this.data.metrics.simon.simonSequence = this.simonSequence;
+
             this.playerSequence.forEach((button, index) => {
                 if(this.simonSequence[index] === button)
                     this.data.metrics.simon.score += 1;
