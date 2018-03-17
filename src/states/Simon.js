@@ -107,20 +107,16 @@ export default class extends Phaser.State {
     }
 
     _select(item, pointer) {
-        if(!this.simonSez && !this.intro && !this.loser && !this.winner)
-            item.alpha = 1;
+        item.alpha = 1;
     }
 
     _release(item, pointer) {
-        if(!this.simonSez && !this.intro && !this.loser && !this.winner) {
-            item.alpha = .35;
-            this._playerSequence(item);
-        }
+        item.alpha = .35;
+        // this._playerSequence(item);
     }
 
     _moveOff(item, pointer) {
-        if(!this.simonSez && !this.intro && !this.loser && !this.winner)
-            item.alpha = .35;
+        item.alpha = .35;
     }
 
     _playerSequence(selected) {
