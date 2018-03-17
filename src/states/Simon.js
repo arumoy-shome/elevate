@@ -30,10 +30,21 @@ export default class extends Phaser.State {
 
     update() {
         this.elapsedTime += this.game.time.elapsed;
-        
+
         if(this._highlightNextButton()) {
             this._highlightButton(this.simonSequenceIndex);
             this.simonSequenceIndex++;
+        }
+
+        if(this._noMoreAttempts()) {
+            this.playerSequence.forEach((button, index) => {
+                if(this.simonSequence[index] === button)
+                    this.metrics.simon.score += 1;
+                else {
+                    console.log(this.metrics.simon.score);
+                    this.game.paused = true;
+                }
+            });
         }
     }
 
@@ -121,6 +132,9 @@ export default class extends Phaser.State {
         let index = this.buttons.getIndex(selected);
         this.playerSequence.push(index);
     }
+
+    _noMoreAttempts() {
+        return this.playerSequence.length === SEQUENCE_COUNT;
     }
 }
 
