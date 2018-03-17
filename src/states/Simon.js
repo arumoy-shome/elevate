@@ -48,19 +48,12 @@ export default class extends Phaser.State {
     }
 
     render() {
-        if(!this.intro) {
-            if(this.simonSez)
-                game.debug.text('Pick the following groceries', 300, 96, 'rgb(255,0,0)');
-            else
-                game.debug.text('YOUR TURN', 420, 95, 'rgb(0,255,0)');
-        } else {
-            game.debug.text('GET READY', 420, 95, 'rgb(0,0,255)');
-        }
+        this._getReady();
+    }
 
-        if(this.winner)
-            game.debug.text('YOU WON!', 420, 15, 'rgb(0,0,255)');
-        else if (this.loser)
-            game.debug.text('YOU LOST!', 360, 15, 'rgb(0,0,255)');
+    _getReady() {
+        if(this.elapsedTime < ONE_SEC)
+            this.game.debug.text('GET READY', 420, 95, 'rgb(0,0,255)');
     }
 
     _addInstructions() {
