@@ -32,7 +32,7 @@ export default class extends Phaser.State {
         this.elapsedTime += this.game.time.elapsed;
 
         if(this._highlightNextButton()) {
-            this._highlightButton(this.simonSequenceIndex);
+            this._highlightButton(this.simonSequence[this.simonSequenceIndex]);
             this.simonSequenceIndex++;
         }
 
