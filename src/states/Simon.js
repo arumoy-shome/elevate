@@ -94,11 +94,11 @@ export default class extends Phaser.State {
             to({ alpha: 1 }, HALF_SEC, "Linear", false);
         let releaseTween = this.game.add.tween(button).
             to({ alpha: 0.35 }, HALF_SEC, "Linear", false);
-        
+
         selectTween.chain(releaseTween);
         selectTween.start();
     }
-    
+
     _highlightNextButton() {
         return (this.elapsedTime % ONE_SEC === 0 &&
                 this.simonSequenceIndex < SEQUENCE_COUNT)
@@ -110,40 +110,17 @@ export default class extends Phaser.State {
 
     _release(item, pointer) {
         item.alpha = .35;
-        // this._playerSequence(item);
+        this._updatePlayerSequence(item);
     }
 
     _moveOff(item, pointer) {
         item.alpha = .35;
     }
 
-    _playerSequence(selected) {
-        let correctButton = this.sequenceList[this.userCount];
-        let button = this.buttons.getIndex(selected);
-        this.userCount++;
-
-        if(button == correctButton) {
-            if(this.userCount == this.N) {
-                if(this.N == this.sequenceCount) {
-                    this.winner = true;
-                    setTimeout(() => {
-                        this.game.state.start('CandyCatch', true, false, { level: 0 });
-                    }, 2000);
-                } else {
-                    this.userCount = 0;
-                    this.currentCount = 0;
-                    this.N++;
-                    this.simonSez = true;
-                }
-            }
-            this.score += 1;
-            console.log(`score: ${this.score}`);
-        } else {
-            this.loser = true;
-            setTimeout(() => {
-                this.game.state.start('CandyCatch', true, false, { level: 0 });
-            }, 2000);
-        }
+    _updatePlayerSequence(selected) {
+        let index = this.buttons.getIndex(selected);
+        this.playerSequence.push(index);
+    }
     }
 }
 
