@@ -1,12 +1,16 @@
 import Phaser from 'phaser';
 import config from '../config'
 
+const ONE_SEC = 1000;
+const HALF_SEC = 500;
+const SEQUENCE_COUNT = 3;
+
 export default class extends Phaser.State {
     init(metrics) {
         this.metrics = metrics || {};
         this.elapsedTime = 0;
-        this.sequenceCount = 3;
-        this.sequenceList = [];
+        this.simonSequence = [];
+        this.simonSequenceIndex = 0;
         this.N = 3;
     }
 
@@ -71,9 +75,9 @@ export default class extends Phaser.State {
     }
 
     _setSequence() {
-        for (var i = 0; i < this.sequenceCount; i++) {
+        for (var i = 0; i < SEQUENCE_COUNT; i++) {
             let button = this.game.rnd.integerInRange(0,5);
-            this.sequenceList.push(button);
+            this.simonSequence.push(button);
         }
     }
 
