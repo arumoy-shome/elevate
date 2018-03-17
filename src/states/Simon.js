@@ -22,28 +22,14 @@ export default class extends Phaser.State {
         this._addInstructions();
         this._loadLevel(this.data.buttons);
         this._setSequence();
-        setTimeout(() => {
-            this._simonSequence();
-            this.intro = false;
-        }, 2000);
     }
 
     update() {
-        if(this.simonSez) {
-            if(this.game.time.now - this.timeCheck > 700-this.N*40) {
-                this.buttons.getAt(this.litButton).alpha = .35;
-                game.paused = true;
-
-                setTimeout(() => {
-                    if(this.currentCount < this.N) {
-                        this.game.paused = false;
-                        this._simonSequence();
-                    } else {
-                        this.simonSez = false;
-                        game.paused = false;
-                    }
-                }, 400 - this.N * 20);
-            }
+        this.elapsedTime += this.game.time.elapsed;
+        
+        if(this._highlightNextButton()) {
+            this._highlightButton(this.simonSequenceIndex);
+            this.simonSequenceIndex++;
         }
     }
 
@@ -91,12 +77,20 @@ export default class extends Phaser.State {
         }
     }
 
-    _simonSequence() {
-        this.simonSez = true;
-        this.litButton = this.sequenceList[this.currentCount];
-        this.buttons.getAt(this.litButton).alpha = 1;
-        this.timeCheck = this.game.time.now;
-        this.currentCount++;
+    _highlightButton(index) {
+        let button = this.buttons.getAt(index);
+        let selectTween = this.game.add.tween(button).
+            to({ alpha: 1 }, HALF_SEC, "Linear", false);
+        let releaseTween = this.game.add.tween(button).
+            to({ alpha: 0.35 }, HALF_SEC, "Linear", false);
+        
+        selectTween.chain(releaseTween);
+        selectTween.start();
+    }
+    
+    _highlightNextButton() {
+        return (this.elapsedTime % ONE_SEC === 0 &&
+                this.simonSequenceIndex < SEQUENCE_COUNT)
     }
 
     _select(item, pointer) {
