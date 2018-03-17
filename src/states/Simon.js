@@ -63,11 +63,6 @@ export default class extends Phaser.State {
         this.data.metrics.simon = this.data.metrics.simon || { score: 0 };
     }
 
-    _getReady() {
-        if(this.elapsedTime < ONE_SEC)
-            this.game.debug.text('GET READY', 420, 95, 'rgb(0,0,255)');
-    }
-
     _addInstructions() {
         let style = { font: "40px Arial",
                       fill: "#FFCC00",

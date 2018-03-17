@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import StartButton from '../sprites/StartButton';
 import config from '../config';
 import _ from 'lodash';
 
@@ -35,9 +36,12 @@ export default class extends Phaser.State {
         this.game.add.image(0, 0, 'background');
         this.sfx = { candy: this.game.add.audio('sfxCandy') };
         this.levelDetails = this.game.cache.getJSON(`catch-${this.data.level}`);
+        let button = new StartButton(this.game, this._startState, this)
 
         this._addQuestion();
         this._loadLevel(this.levelDetails);
+        this.game.paused = true;
+        this.game.add.existing(button);
     }
 
     update() {
@@ -50,13 +54,9 @@ export default class extends Phaser.State {
         }
     }
 
-    render() {
-        this._getReady();
-    }
-
-    _getReady() {
-        if(this.elapsedTime < TWO_SEC)
-            this.game.debug.text('GET READY', 420, 95, 'rgb(0,0,255)');
+    _startState(button) {
+        this.game.paused = false;
+        button.kill();
     }
 
     _setupMetrics() {
@@ -97,7 +97,7 @@ export default class extends Phaser.State {
     }
 
     _spawnCandies(candies) {
-        let dropPos = Math.floor(Math.random()*config.default.width);
+        let dropPos = Math.floor(Math.random()*config.width);
         let dropOffset = [-27,-36,-36,-38,-48];
         let candyType = Math.floor(Math.random()*candies.length);
         let candyIndex = candies[candyType].index;
