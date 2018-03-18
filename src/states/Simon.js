@@ -41,7 +41,6 @@ export default class extends Phaser.State {
         }
 
         if(this._noMoreAttempts()) {
-            this.data.metrics.simon.simonSequence = this.simonSequence;
 
             this.playerSequence.forEach((button, index) => {
                 if(this.simonSequence[index] === button)
@@ -96,6 +95,7 @@ export default class extends Phaser.State {
             let button = this.game.rnd.integerInRange(0,5);
             this.simonSequence.push(button);
         }
+        this.data.metrics.simon.simonSequence = this.simonSequence;
     }
 
     _highlightButton(index) {
