@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import _ from 'lodash';
 
+const SEQUENCE_COUNT = 3;
+
 export default class extends Phaser.State {
     init(data) {
         this.data = data;
@@ -23,12 +25,20 @@ export default class extends Phaser.State {
     }
 
     update() {
-        if(this.playerSequence.length === 3) {
-            if(this._rightSequence()) {
-                this.data.metrics.recall.score++;
-            }
+        if(this._noMoreAttempts()) {
+            this.playerSequence.forEach((button, index) => {
+                if(this.data.metrics.simon.simonSequence[index] === button) {
+                    this.data.metrics.recall.score += 1;
+                } else {
+                    this.game.state.start('LeaderBoard', true, false, this.data)
+                }
+            });
             this.game.state.start('LeaderBoard', true, false, this.data);
         }
+    }
+
+    _noMoreAttempts() {
+        return this.playerSequence.length === SEQUENCE_COUNT;
     }
 
     _setupMetrics() {
