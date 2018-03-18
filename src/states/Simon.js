@@ -36,15 +36,16 @@ export default class extends Phaser.State {
         this.elapsedTime += this.game.time.elapsed;
 
         if(this._highlightNextButton()) {
-            this._highlightButton(this.simonSequence[this.simonSequenceIndex]);
+            this.game.time.events.add(ONE_SEC, this._highlightButton, this)
             this.simonSequenceIndex++;
         }
 
         if(this._noMoreAttempts()) {
 
             this.playerSequence.forEach((button, index) => {
-                if(this.simonSequence[index] === button)
+                if(this.simonSequence[index] === button) {
                     this.data.metrics.simon.score += 1;
+                }
                 else {
                     this.game.state.start('CandyCatch', true, false, this.data)
                 }
@@ -98,8 +99,8 @@ export default class extends Phaser.State {
         this.data.metrics.simon.simonSequence = this.simonSequence;
     }
 
-    _highlightButton(index) {
-        let button = this.buttons.getAt(index);
+    _highlightButton() {
+        let button = this.buttons.getAt(this.simonSequenceIndex);
         let selectTween = this.game.add.tween(button).
             to({ alpha: 1 }, QUARTER_SEC, "Linear", false);
         let releaseTween = this.game.add.tween(button).
@@ -110,8 +111,7 @@ export default class extends Phaser.State {
     }
 
     _highlightNextButton() {
-        return (this.elapsedTime % ONE_SEC === 0 &&
-                this.simonSequenceIndex < SEQUENCE_COUNT)
+        return (this.simonSequenceIndex < SEQUENCE_COUNT && this.elapsedTime % ONE_SEC === 0)
     }
 
     _select(item, pointer) {
