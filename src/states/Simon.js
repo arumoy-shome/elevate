@@ -17,15 +17,18 @@ export default class extends Phaser.State {
 
     preload() {
         this.game.load.json('simon','data/simon/simon.json');
+        this.game.load.json('feedback','data/feedback.json');
         this.game.load.spritesheet('item', 'assets/images/simon/grocery-list.jpg', 160, 160);
     }
 
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";
         this.levelDetails = this.game.cache.getJSON('simon');
+        this.feedback = this.game.cache.getJSON('feedback');
         let button = new StartButton(this.game, this._startState, this)
 
         this._addInstructions();
+        this._addMessages();
         this._loadLevel(this.levelDetails.buttons);
         this._setSequence();
         this.game.paused = true;
@@ -71,6 +74,16 @@ export default class extends Phaser.State {
                       align: "center" };
         let text = 'Follow the instructions to select your grocery list.';
         this.game.add.text(50, 25, text, style);
+    }
+
+    _addMessages() {
+        let style = { font: "20px Arial",
+                      fill: "#FFCC00",
+                      stroke: "#333",
+                      strokeThickness: 5,
+                      align: "center" };
+        this.rewardMessage = this.game.add.text(400, 75, '', style);
+        this.motivateMessage = this.game.add.text(400, 75, '', style);
     }
 
     _loadLevel(buttons) {
@@ -121,6 +134,7 @@ export default class extends Phaser.State {
     _release(item, pointer) {
         item.alpha = .35;
         this._updatePlayerSequence(item);
+        this._flashMessage(item);
     }
 
     _moveOff(item, pointer) {
@@ -130,6 +144,22 @@ export default class extends Phaser.State {
     _updatePlayerSequence(selected) {
         let index = this.buttons.getIndex(selected);
         this.playerSequence.push(index);
+    }
+
+    _flashMessage(selected) {
+        let index = this.buttons.getIndex(selected);
+        if(this.simonSequence[index] === this.playerSequence[index]) {
+            this.rewardMessage.setText(this.feedback.reward[_.random(3)]);
+            setTimeout(() => {
+                this.rewardMessage.setText('');
+            }, 500);
+        }
+        else {
+            this.motivateMessage.setText(this.feedback.motivate[_.random(3)]);
+            setTimeout(() => {
+                this.motivateMessage.setText('');
+            }, 500);
+        }
     }
 
     _noMoreAttempts() {
