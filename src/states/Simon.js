@@ -32,30 +32,30 @@ export default class extends Phaser.State {
     }
 
     update() {
-        this.elapsedTime += this.game.time.elapsed;
-
-        if(this._highlightNextButton()) {
-            this.game.time.events.add(ONE_SEC, this._highlightButton, this)
-            this.simonSequenceIndex++;
-        }
+        if(this.simonSequenceIndex === SEQUENCE_COUNT)
+            this.game.time.events.remove(this.playSimonSequence);
 
         if(this._noMoreAttempts()) {
-
             this.playerSequence.forEach((button, index) => {
                 if(this.simonSequence[index] === button) {
                     this.data.metrics.simon.score += 1;
                 }
                 else {
-                    this.game.state.start('CandyCatch', true, false, this.data)
+                    setTimeout(() => {
+                        this.game.state.start('CandyCatch', true, false, this.data)
+                    }, ONE_SEC);
                 }
             });
-            this.game.state.start('CandyCatch', true, false, this.data);
+            setTimeout(() => {
+                this.game.state.start('CandyCatch', true, false, this.data)
+            }, ONE_SEC);
         }
     }
 
     _startState(button) {
         this.game.paused = false;
         button.kill();
+        this.playSimonSequence = this.game.time.events.loop(ONE_SEC, this._highlightButton, this);
     }
 
     _setupMetrics() {
@@ -109,7 +109,7 @@ export default class extends Phaser.State {
     }
 
     _highlightButton() {
-        let button = this.buttons.getAt(this.simonSequenceIndex);
+        let button = this.buttons.getAt(this.simonSequence[this.simonSequenceIndex]);
         let selectTween = this.game.add.tween(button).
             to({ alpha: 1 }, QUARTER_SEC, "Linear", false);
         let releaseTween = this.game.add.tween(button).
@@ -117,10 +117,9 @@ export default class extends Phaser.State {
 
         selectTween.chain(releaseTween);
         selectTween.start();
-    }
-
-    _highlightNextButton() {
-        return (this.simonSequenceIndex < SEQUENCE_COUNT && this.elapsedTime % ONE_SEC === 0)
+        releaseTween.onComplete.add(() => {
+            this.simonSequenceIndex++;
+        });
     }
 
     _select(item, pointer) {
