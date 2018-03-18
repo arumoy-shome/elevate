@@ -36,12 +36,14 @@ export default class extends Phaser.State {
         this.game.add.image(0, 0, 'background');
         this.sfx = { candy: this.game.add.audio('sfxCandy') };
         this.levelDetails = this.game.cache.getJSON(`catch-${this.data.level}`);
-        let button = new StartButton(this.game, this._startState, this)
 
         this._addQuestion();
         this._loadLevel(this.levelDetails);
-        this.game.paused = true;
-        this.game.add.existing(button);
+        if(this.data.level === 0) {
+            let button = new StartButton(this.game, this._startState, this)
+            this.game.paused = true;
+            this.game.add.existing(button);
+        }
     }
 
     update() {
