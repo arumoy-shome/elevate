@@ -15,11 +15,7 @@ export default class extends Phaser.State {
         this.simonSequenceIndex = 0;
     }
 
-    preload() {
-        this.game.load.json('simon','data/simon/simon.json');
-        this.game.load.json('feedback','data/feedback.json');
-        this.game.load.spritesheet('item', 'assets/images/simon/grocery-list.jpg', 160, 160);
-    }
+    preload() {}
 
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";

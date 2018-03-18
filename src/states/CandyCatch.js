@@ -18,19 +18,7 @@ export default class extends Phaser.State {
         this.elapsedTime = 0;
     }
 
-    preload() {
-        this.game.load.image('background', 'assets/images/platform/background.png');
-        this.game.load.image('ground', 'assets/images/platform/ground.png');
-        this.game.load.json('catch-0','data/platform/catch00.json');
-        this.game.load.json('catch-1','data/platform/catch01.json');
-        this.game.load.json('catch-2','data/platform/catch02.json');
-        this.game.load.json('catch-3','data/platform/catch03.json');
-        this.game.load.json('catch-4','data/platform/catch04.json');
-        this.game.load.audio('sfxCandy', 'assets/sounds/platform/coin.wav');
-        this.game.load.spritesheet('hero', 'assets/images/platform/hero.png', 36, 42);
-        this.game.load.spritesheet('candy', 'assets/images/candy-catch/candy.png', 82, 98);
-        this.game.load.image('game-over', 'assets/images/candy-catch/gameover.png');
-    }
+    preload() {}
 
     create () {
         this.game.add.image(0, 0, 'background');

@@ -1,8 +1,5 @@
 import Phaser from 'phaser';
-import StartButton from '../sprites/StartButton';
-
-const BTN_WIDTH = 401;
-const BTN_HEIGHT = 143;
+import { centerGameObject } from '../utils';
 
 export default class extends Phaser.State {
     init(data) {
@@ -12,21 +9,35 @@ export default class extends Phaser.State {
     preload() {
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
-
-        this.game.load.image('background', 'assets/images/platform/background.png');
-        this.game.load.spritesheet('button-start',
-                                   'assets/images/candy-catch/button-start.png',
-                                   401,
-                                   143);
+        
+        this._loadAssets();
+        this._loadData();
     }
 
     create() {
-        this.game.add.image(0, 0, 'background');
-        let button = new StartButton(this.game, this._startState, this)
-        this.game.add.existing(button);
+        this.game.state.start('Simon', true, false, this.data);
     }
 
     _startState() {
         this.game.state.start('Simon', true, false, this.data);
+    }
+    
+    _loadAssets() {
+        this.game.load.image('background', 'assets/images/background.png');
+        this.game.load.image('ground', 'assets/images/ground.png');
+        this.game.load.audio('sfxCandy', 'assets/sounds/coin.wav');
+        this.game.load.spritesheet('button-start', 'assets/images/button.png', 401, 143);
+        this.game.load.spritesheet('item', 'assets/images/grocery-list.jpg', 160, 160);
+        this.game.load.spritesheet('candy', 'assets/images/candy.png', 82, 98);
+    }
+    
+    _loadData() {
+        this.game.load.json('simon','data/simon.json');
+        this.game.load.json('feedback','data/feedback.json');
+        this.game.load.json('catch-0','data/catch00.json');
+        this.game.load.json('catch-1','data/catch01.json');
+        this.game.load.json('catch-2','data/catch02.json');
+        this.game.load.json('catch-3','data/catch03.json');
+        this.game.load.json('catch-4','data/catch04.json');
     }
 }
