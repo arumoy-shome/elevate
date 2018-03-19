@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import StartButton from '../sprites/StartButton';
+import Question from '../sprites/Question';
 import Item from '../sprites/Item';
 import config from '../config';
 import _ from 'lodash';
 
-const SPAWN_OFFSET = 500;
+const SPAWN_OFFSET = 1000;
 const GRAVITY = 50;
 
 export default class extends Phaser.State {
@@ -12,10 +13,8 @@ export default class extends Phaser.State {
         this.data = data;
         this._setupMetrics();
         this.spawnItemTimer = 0;
-        this.heroVsCandyCount = 0;
+        this.heroVsItemCount = 0;
     }
-
-    preload() {}
 
     create () {
         this.game.add.image(0, 0, 'background');
@@ -24,11 +23,6 @@ export default class extends Phaser.State {
 
         this._addQuestion();
         this._loadLevel(this.levelDetails);
-        if(this.data.level === 0) {
-            let button = new StartButton(this.game, this._startState, this)
-            this.game.paused = true;
-            this.game.add.existing(button);
-        }
     }
 
     update() {
@@ -40,11 +34,6 @@ export default class extends Phaser.State {
         }
     }
 
-    _startState(button) {
-        this.game.paused = false;
-        button.kill();
-    }
-
     _setupMetrics() {
         this.data.metrics.candyCatch = this.data.metrics.candyCatch || {
             finalScore: 0,
@@ -54,17 +43,11 @@ export default class extends Phaser.State {
     }
 
     _addQuestion() {
-        let style = { font: "40px Arial",
-                              fill: "#FFCC00",
-                              stroke: "#333",
-                              strokeThickness: 5,
-                              align: "center" };
-        this.game.add.text(120, 20, this.levelDetails.question, style);
+        this.game.add.existing(new Question(this.game, this.levelDetails.question));
     }
 
     _loadLevel(data) {
         this.items = this.game.add.group();
-
         this.game.physics.arcade.gravity.y = GRAVITY;
     }
 
@@ -82,7 +65,7 @@ export default class extends Phaser.State {
         this.sfx.play();
         item.kill();
         this.data.metrics.candyCatch.collection.push(item.value);
-        this.heroVsCandyCount++;
+        this.heroVsItemCount++;
 
         if(this._scored())
             this.data.metrics.candyCatch.score.push(1);
@@ -99,7 +82,7 @@ export default class extends Phaser.State {
 
     _scored() {
         let collection = this.data.metrics.candyCatch.collection
-        return (this.heroVsCandyCount === 1 &&
+        return (this.heroVsItemCount === 1 &&
                 collection[collection.length-1] === this.levelDetails.rightAnswer);
     }
 

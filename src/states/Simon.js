@@ -18,8 +18,6 @@ export default class extends Phaser.State {
         this.simonSequenceIndex = 0;
     }
 
-    preload() {}
-
     create() {
         this.game.stage.backgroundColor = BACKGROUND;
         this.levelDetails = this.game.cache.getJSON('simon');
