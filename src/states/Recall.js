@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import Question from '../sprites/Question';
+import Message from '../sprites/Message';
 import _ from 'lodash';
 
 const SEQUENCE_COUNT = 3;
@@ -11,27 +13,34 @@ export default class extends Phaser.State {
         this.playerSequence = [];
     }
 
-    preload() {}
-
     create() {
         this.game.stage.backgroundColor = "#f2f2f2";
-        this.levelDetails = this.game.cache.getJSON('simon');
+        this.sfx = { right: this.game.add.audio('sfx-right'),
+                     wrong: this.game.add.audio('sfx-wrong') }
 
-        this._addInstructions();
+        this.levelDetails = this.game.cache.getJSON('simon');
+        this.feedback = this.game.cache.getJSON('feedback');
+
+        this._addQuestion();
+        this._addFeedback();
         this._loadLevel(this.levelDetails.buttons);
     }
 
     update() {
         if(this._noMoreAttempts()) {
             this.playerSequence.forEach((button, index) => {
-                if(this.data.metrics.simon.simonSequence[index] === button) {
+                if(this.simonSequence[index] === button) {
                     this.data.metrics.recall.score += 1;
                 } else {
-                    this.game.state.start('LeaderBoard', true, false, this.data)
+                    this._queNextState();
                 }
             });
-            this.game.state.start('LeaderBoard', true, false, this.data);
+            this._queNextState();
         }
+    }
+
+    _queNextState() {
+        this.game.state.start('LeaderBoard', true, false, this.data)
     }
 
     _noMoreAttempts() {
@@ -42,14 +51,14 @@ export default class extends Phaser.State {
         this.data.metrics.recall = this.data.metrics.recall || { score: 0 };
     }
 
-    _addInstructions() {
-        let style = { font: "40px Arial",
-                      fill: "#FFCC00",
-                      stroke: "#333",
-                      strokeThickness: 5,
-                      align: "center" };
-        let text = 'Do you still remember the grocery items you need?';
-        this.game.add.text(25, 25, text, style);
+    _addQuestion() {
+        let text = 'Do you still remember the order?';
+        this.game.add.existing(new Question(this.game, 50, text));
+    }
+
+    _addFeedback() {
+        this.rewardMessage = this.game.add.existing(new Message(this.game, ''));
+        this.motivateMessage = this.game.add.existing(new Message(this.game, ''));
     }
 
     _loadLevel(buttons) {
@@ -77,6 +86,29 @@ export default class extends Phaser.State {
     _release(item, pointer) {
         item.alpha = .35;
         this.playerSequence.push(this.buttons.getIndex(item));
+        this._playFeedback(item);
+    }
+
+    _playFeedback(selected) {
+        if(this._scored()) {
+            this.rewardMessage.setText(this.feedback.reward[_.random(2)]);
+            this.sfx.right.play();
+            setTimeout(() => {
+                this.rewardMessage.setText('');
+            }, 500);
+        }
+        else {
+            this.motivateMessage.setText(this.feedback.motivate[_.random(2)]);
+            this.sfx.wrong.play();
+            setTimeout(() => {
+                this.motivateMessage.setText('');
+            }, 500);
+        }
+    }
+
+    _scored() {
+        let index = this.playerSequence.length-1;
+        return this.simonSequence[index] === this.playerSequence[index];
     }
 
     _moveOff(item, pointer) {
