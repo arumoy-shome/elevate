@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import StartButton from '../sprites/StartButton';
 
 const ONE_SEC = 1000;
-const QUARTER_SEC = 250;
+const QUARTER_SEC = ONE_SEC/4;
 const SEQUENCE_COUNT = 3;
 
 export default class extends Phaser.State {
@@ -142,15 +142,15 @@ export default class extends Phaser.State {
     }
 
     _flashMessage(selected) {
-        let index = this.buttons.getIndex(selected);
+        let index = this.playerSequence.length-1;
         if(this.simonSequence[index] === this.playerSequence[index]) {
-            this.rewardMessage.setText(this.feedback.reward[_.random(3)]);
+            this.rewardMessage.setText(this.feedback.reward[_.random(2)]);
             setTimeout(() => {
                 this.rewardMessage.setText('');
             }, 500);
         }
         else {
-            this.motivateMessage.setText(this.feedback.motivate[_.random(3)]);
+            this.motivateMessage.setText(this.feedback.motivate[_.random(2)]);
             setTimeout(() => {
                 this.motivateMessage.setText('');
             }, 500);
