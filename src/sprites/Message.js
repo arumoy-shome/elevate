@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 const Y = 50;
-const STYLE = { font: "15px Arial",
+const STYLE = { font: "15px Pusab",
                 fill: "#FFCC00",
                 stroke: "#333",
                 strokeThickness: 5,
