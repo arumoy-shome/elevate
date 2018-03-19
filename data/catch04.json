@@ -4,7 +4,8 @@
         { "value": 86 },
         { "value": 79 },
         { "value": 72 },
-        { "value": 65 }
+        { "value": 65 },
+        { "value": 58 }
     ],
     "question": "72 - 7 = ?",
     "rightAnswer": 65
