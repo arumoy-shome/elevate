@@ -4,6 +4,7 @@ import StartButton from '../sprites/StartButton';
 const ONE_SEC = 1000;
 const QUARTER_SEC = ONE_SEC/4;
 const SEQUENCE_COUNT = 3;
+const BACKGROUND =  "#f2f2f2";
 
 export default class extends Phaser.State {
     init(data) {
@@ -18,7 +19,7 @@ export default class extends Phaser.State {
     preload() {}
 
     create() {
-        this.game.stage.backgroundColor = "#f2f2f2";
+        this.game.stage.backgroundColor = BACKGROUND;
         this.levelDetails = this.game.cache.getJSON('simon');
         this.feedback = this.game.cache.getJSON('feedback');
         let button = new StartButton(this.game, this._startState, this)
