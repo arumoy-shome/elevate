@@ -9,13 +9,8 @@ export default class extends Phaser.State {
     init(data) {
         this.data = data;
         this._setupMetrics();
-        this.keys = this.input.keyboard.addKeys({
-            left: Phaser.KeyCode.LEFT,
-            right: Phaser.KeyCode.RIGHT
-        });
         this.spawnCandyTimer = 0;
         this.heroVsCandyCount = 0;
-        this.elapsedTime = 0;
     }
 
     preload() {}
@@ -35,7 +30,6 @@ export default class extends Phaser.State {
     }
 
     update() {
-        this.elapsedTime += this.game.time.elapsed;
         this.spawnCandyTimer += this.game.time.elapsed;
 
         if(this.spawnCandyTimer > TWO_SEC) {
