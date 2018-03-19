@@ -20,10 +20,8 @@ export default class extends Phaser.State {
 
     create() {
         this.game.stage.backgroundColor = BACKGROUND;
-        this.sfx = {
-            right: this.game.add.audio('sfx-right'),
-            wrong: this.game.add.audio('sfx-wrong')
-        }
+        this.sfx = { right: this.game.add.audio('sfx-right'),
+                     wrong: this.game.add.audio('sfx-wrong') }
 
         this.levelDetails = this.game.cache.getJSON('simon');
         this.feedback = this.game.cache.getJSON('feedback');
@@ -138,8 +136,7 @@ export default class extends Phaser.State {
     }
 
     _playFeedback(selected) {
-        let index = this.playerSequence.length-1;
-        if(this.simonSequence[index] === this.playerSequence[index]) {
+        if(this._scored()) {
             this.rewardMessage.setText(this.feedback.reward[_.random(2)]);
             this.sfx.right.play();
             setTimeout(() => {
@@ -155,6 +152,10 @@ export default class extends Phaser.State {
         }
     }
 
+    _scored() {
+        let index = this.playerSequence.length-1;
+        return this.simonSequence[index] === this.playerSequence[index];
+    }
     _noMoreAttempts() {
         return this.playerSequence.length === SEQUENCE_COUNT;
     }

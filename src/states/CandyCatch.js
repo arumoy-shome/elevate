@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import StartButton from '../sprites/StartButton';
 import Question from '../sprites/Question';
+import Message from '../sprites/Message';
 import Item from '../sprites/Item';
 import config from '../config';
 import _ from 'lodash';
@@ -18,10 +19,14 @@ export default class extends Phaser.State {
 
     create () {
         this.game.add.image(0, 0, 'background');
-        this.sfx = this.game.add.audio('sfx-collect');
+        this.sfx = { right: this.game.add.audio('sfx-right'),
+                     wrong: this.game.add.audio('sfx-wrong') }
+
         this.levelDetails = this.game.cache.getJSON(`catch-${this.data.level}`);
+        this.feedback = this.game.cache.getJSON('feedback');
 
         this._addQuestion();
+        this._addFeedback();
         this._loadLevel(this.levelDetails);
     }
 
@@ -46,6 +51,11 @@ export default class extends Phaser.State {
         this.game.add.existing(new Question(this.game, this.levelDetails.question));
     }
 
+    _addFeedback() {
+        this.rewardMessage = this.game.add.existing(new Message(this.game, ''));
+        this.motivateMessage = this.game.add.existing(new Message(this.game, ''));
+    }
+
     _loadLevel(data) {
         this.items = this.game.add.group();
         this.game.physics.arcade.gravity.y = GRAVITY;
@@ -62,16 +72,33 @@ export default class extends Phaser.State {
     }
 
     _select(item, pointer) {
-        this.sfx.play();
         item.kill();
         this.data.metrics.candyCatch.collection.push(item.value);
         this.heroVsItemCount++;
 
-        if(this._scored())
-            this.data.metrics.candyCatch.score.push(1);
-        else
-            this.data.metrics.candyCatch.score.push(0);
+        this._playFeedback();
+        this._queNextState();
+    }
 
+    _playFeedback() {
+        if(this._scored()) {
+            this.data.metrics.candyCatch.score.push(1);
+            this.rewardMessage.setText(this.feedback.reward[_.random(2)]);
+            this.sfx.right.play();
+            setTimeout(() => {
+                this.rewardMessage.setText('');
+            }, 500);
+        } else {
+            this.data.metrics.candyCatch.score.push(0);
+            this.motivateMessage.setText(this.feedback.motivate[_.random(2)]);
+            this.sfx.wrong.play();
+            setTimeout(() => {
+                this.motivateMessage.setText('');
+            }, 500);
+        }
+    }
+
+    _queNextState() {
         if(this.data.level === 4) {
             this.data.metrics.candyCatch.finalScore = _.sum(this.data.metrics.candyCatch.score);
             this.game.state.start('Recall', true, false, this.data)
