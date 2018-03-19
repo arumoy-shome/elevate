@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import StartButton from '../sprites/StartButton';
 import Question from '../sprites/Question';
+import Message from '../sprites/Message';
 
 const ONE_SEC = 1000;
 const QUARTER_SEC = ONE_SEC/4;
@@ -26,7 +27,7 @@ export default class extends Phaser.State {
         let button = new StartButton(this.game, this._startState, this)
 
         this._addQuestion();
-        this._addMessages();
+        this._addFeedback();
         this._loadLevel(this.levelDetails.buttons);
         this._setSequence();
         this.game.paused = true;
@@ -66,18 +67,12 @@ export default class extends Phaser.State {
 
     _addQuestion() {
         let text = 'Pick the grocery items in the same order';
-        let question = new Question(this.game, text);
         this.game.add.existing(new Question(this.game, text));
     }
 
-    _addMessages() {
-        let style = { font: "20px Arial",
-                      fill: "#FFCC00",
-                      stroke: "#333",
-                      strokeThickness: 5,
-                      align: "center" };
-        this.rewardMessage = this.game.add.text(400, 75, '', style);
-        this.motivateMessage = this.game.add.text(400, 75, '', style);
+    _addFeedback() {
+        this.rewardMessage = this.game.add.existing(new Message(this.game, ''));
+        this.motivateMessage = this.game.add.existing(new Message(this.game, ''));
     }
 
     _loadLevel(buttons) {
