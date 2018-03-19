@@ -100,9 +100,9 @@ export default class extends Phaser.State {
 
     _queNextState() {
         if(this.data.level === 4) {
-            setTimeout(() => { this._startNextState() }, 1000);
+            setTimeout(() => { this._startNextState() }, 750);
         } else {
-            setTimeout(() => { this._startNextLevel() }, 1000);
+            setTimeout(() => { this._startNextLevel() }, 750);
         }
     }
 
