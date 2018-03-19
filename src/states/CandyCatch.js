@@ -48,7 +48,7 @@ export default class extends Phaser.State {
     }
 
     _addQuestion() {
-        this.game.add.existing(new Question(this.game, this.levelDetails.question));
+        this.game.add.existing(new Question(this.game, 50, this.levelDetails.question));
     }
 
     _addFeedback() {
@@ -100,10 +100,9 @@ export default class extends Phaser.State {
 
     _queNextState() {
         if(this.data.level === 4) {
-            this.data.metrics.candyCatch.finalScore = _.sum(this.data.metrics.candyCatch.score);
-            this.game.state.start('Recall', true, false, this.data)
+            setTimeout(() => { this._startNextState() }, 1000);
         } else {
-            this._startNextLevel();
+            setTimeout(() => { this._startNextLevel() }, 1000);
         }
     }
 
@@ -111,6 +110,11 @@ export default class extends Phaser.State {
         let collection = this.data.metrics.candyCatch.collection
         return (this.heroVsItemCount === 1 &&
                 collection[collection.length-1] === this.levelDetails.rightAnswer);
+    }
+
+    _startNextState() {
+        this.data.metrics.candyCatch.finalScore = _.sum(this.data.metrics.candyCatch.score);
+        this.game.state.start('Recall', true, false, this.data)
     }
 
     _startNextLevel() {

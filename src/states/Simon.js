@@ -68,7 +68,7 @@ export default class extends Phaser.State {
 
     _addQuestion() {
         let text = 'Pick the grocery items in the same order';
-        this.game.add.existing(new Question(this.game, text));
+        this.game.add.existing(new Question(this.game, 50, text));
     }
 
     _addFeedback() {
@@ -156,6 +156,7 @@ export default class extends Phaser.State {
         let index = this.playerSequence.length-1;
         return this.simonSequence[index] === this.playerSequence[index];
     }
+
     _noMoreAttempts() {
         return this.playerSequence.length === SEQUENCE_COUNT;
     }
