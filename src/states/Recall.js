@@ -40,7 +40,7 @@ export default class extends Phaser.State {
     }
 
     _queNextState() {
-        this.game.state.start('LeaderBoard', true, false, this.data)
+        this.game.state.start('ScoreBoard', true, false, this.data)
     }
 
     _noMoreAttempts() {

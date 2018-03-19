@@ -2,9 +2,9 @@ import Phaser from 'phaser';
 
 import MainMenu from './states/MainMenu';
 import Simon from './states/Simon';
-import CandyCatch from './states/CandyCatch';
+import Catch from './states/Catch';
 import Recall from './states/Recall';
-import LeaderBoard from './states/LeaderBoard';
+import ScoreBoard from './states/ScoreBoard';
 
 import config from './config';
 
@@ -14,9 +14,9 @@ class Game extends Phaser.Game {
 
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('Simon', Simon, false);
-        this.state.add('CandyCatch', CandyCatch, false);
+        this.state.add('Catch', Catch, false);
         this.state.add('Recall', Recall, false);
-        this.state.add('LeaderBoard', LeaderBoard, false);
+        this.state.add('ScoreBoard', ScoreBoard, false);
 
         this.data = {
             level: 0,

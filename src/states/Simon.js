@@ -53,7 +53,7 @@ export default class extends Phaser.State {
     }
 
     _queNextState() {
-            this.game.state.start('CandyCatch', true, false, this.data)
+            this.game.state.start('Catch', true, false, this.data)
     }
 
     _startState(button) {
