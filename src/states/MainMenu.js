@@ -21,6 +21,7 @@ export default class extends Phaser.State {
     _loadAssets() {
         this.game.load.image('background', 'assets/images/background.png');
         this.game.load.image('ground', 'assets/images/ground.png');
+        this.game.load.image('button-restart', 'assets/images/restart.png');
         this.game.load.audio('sfx-right', 'assets/sounds/right.wav');
         this.game.load.audio('sfx-wrong', 'assets/sounds/wrong.wav');
         this.game.load.audio('sfx-bgm', 'assets/sounds/bgm.mp3');
