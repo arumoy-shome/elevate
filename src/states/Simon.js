@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import StartButton from '../sprites/StartButton';
+import Question from '../sprites/Question';
 
 const ONE_SEC = 1000;
 const QUARTER_SEC = ONE_SEC/4;
@@ -24,7 +25,7 @@ export default class extends Phaser.State {
         this.feedback = this.game.cache.getJSON('feedback');
         let button = new StartButton(this.game, this._startState, this)
 
-        this._addInstructions();
+        this._addQuestion();
         this._addMessages();
         this._loadLevel(this.levelDetails.buttons);
         this._setSequence();
@@ -63,14 +64,10 @@ export default class extends Phaser.State {
         this.data.metrics.simon = this.data.metrics.simon || { score: 0 };
     }
 
-    _addInstructions() {
-        let style = { font: "40px Arial",
-                      fill: "#FFCC00",
-                      stroke: "#333",
-                      strokeThickness: 5,
-                      align: "center" };
-        let text = 'Follow the instructions to select your grocery list.';
-        this.game.add.text(50, 25, text, style);
+    _addQuestion() {
+        let text = 'Pick the grocery items in the same order';
+        let question = new Question(this.game, text);
+        this.game.add.existing(new Question(this.game, text));
     }
 
     _addMessages() {
