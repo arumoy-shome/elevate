@@ -28,7 +28,7 @@ export default class extends Phaser.State {
         this.game.load.audio('sfx-collect', 'assets/sounds/collect.wav');
         this.game.load.spritesheet('button-start', 'assets/images/button.png', 401, 143);
         this.game.load.spritesheet('item', 'assets/images/grocery-list.jpg', 160, 160);
-        this.game.load.spritesheet('candy', 'assets/images/candy.png', 82, 98);
+        this.game.load.spritesheet('groceries', 'assets/images/groceries.png', 100, 100);
     }
     
     _loadData() {

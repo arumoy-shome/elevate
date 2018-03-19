@@ -5,7 +5,7 @@ import config from '../config';
 export default class extends Phaser.Sprite {
     constructor(game, x, y, value, type) {
 
-        super(game, x, y, 'candy');
+        super(game, x, y, 'groceries');
 
         this.value = value;
         this.anchor.set(0.5);
