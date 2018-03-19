@@ -21,8 +21,10 @@ export default class extends Phaser.State {
     create() {
         this.game.stage.backgroundColor = BACKGROUND;
         this.sfx = { right: this.game.add.audio('sfx-right'),
-                     wrong: this.game.add.audio('sfx-wrong') }
+                     wrong: this.game.add.audio('sfx-wrong'),
+                     bgm: this.game.add.audio('sfx-bgm', 1, true)}
 
+        this.sfx.bgm.play();
         this.levelDetails = this.game.cache.getJSON('simon');
         this.feedback = this.game.cache.getJSON('feedback');
         let button = new StartButton(this.game, this._startState, this)

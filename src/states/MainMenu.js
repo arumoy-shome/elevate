@@ -23,6 +23,7 @@ export default class extends Phaser.State {
         this.game.load.image('ground', 'assets/images/ground.png');
         this.game.load.audio('sfx-right', 'assets/sounds/right.wav');
         this.game.load.audio('sfx-wrong', 'assets/sounds/wrong.wav');
+        this.game.load.audio('sfx-bgm', 'assets/sounds/bgm.mp3');
         this.game.load.spritesheet('button-start', 'assets/images/button.png', 401, 143);
         this.game.load.spritesheet('item', 'assets/images/grocery-list.jpg', 160, 160);
         this.game.load.spritesheet('groceries', 'assets/images/groceries.png', 100, 100);
