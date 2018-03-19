@@ -14,17 +14,5 @@ export default class extends Phaser.Sprite {
         this.animations.play('type');
         this.inputEnabled = true;
         this.input.start(0, true);
-        this._addText(value);
-    }
-
-    _addText(value) {
-        let style = { font: "15px Arial",
-                              fill: "#FFCC00",
-                              stroke: "#333",
-                              strokeThickness: 5,
-                              align: "center" };
-        let text = this.game.add.text(0, 0, value, style);
-        text.anchor.setTo(0.5);
-        this.addChild(text);
     }
 }

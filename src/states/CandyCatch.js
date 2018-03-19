@@ -36,7 +36,7 @@ export default class extends Phaser.State {
 
         if(this.spawnItemTimer > SPAWN_OFFSET) {
             this.spawnItemTimer = 0;
-            this._spawnItems(this.levelDetails.candies);
+            this._spawnItems(this.levelDetails.items);
         }
     }
 
@@ -63,18 +63,18 @@ export default class extends Phaser.State {
     }
 
     _loadLevel(data) {
-        this.candies = this.game.add.group();
+        this.items = this.game.add.group();
 
         this.game.physics.arcade.gravity.y = GRAVITY;
     }
 
-    _spawnItems(candies) {
+    _spawnItems(items) {
         let x = _.floor(_.random(0, 1, true)*config.width);
         let y = _.random(-30, -50);
-        let type = _.random(candies.length-1);
-        let item = new Item(this.game, x, y, candies[type].value, type)
+        let type = _.random(items.length-1);
+        let item = new Item(this.game, x, y, items[type].value, type)
 
-        this.candies.add(item);
+        this.items.add(item);
         item.events.onInputDown.add(this._select, this);
     }
 
