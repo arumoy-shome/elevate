@@ -17,7 +17,7 @@ export default class extends Phaser.State {
 
     create () {
         this.game.add.image(0, 0, 'background');
-        this.sfx = { candy: this.game.add.audio('sfxCandy') };
+        this.sfx = this.game.add.audio('sfx-collect');
         this.levelDetails = this.game.cache.getJSON(`catch-${this.data.level}`);
 
         this._addQuestion();
@@ -115,7 +115,7 @@ export default class extends Phaser.State {
     }
 
     _select(item, pointer) {
-        this.sfx.candy.play();
+        this.sfx.play();
         item.kill();
         this.data.metrics.candyCatch.collection.push(item.value);
         this.heroVsCandyCount++;
