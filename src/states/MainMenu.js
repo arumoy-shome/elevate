@@ -18,10 +18,6 @@ export default class extends Phaser.State {
         this.game.state.start('Simon', true, false, this.data);
     }
 
-    _startState() {
-        this.game.state.start('Simon', true, false, this.data);
-    }
-    
     _loadAssets() {
         this.game.load.image('background', 'assets/images/background.png');
         this.game.load.image('ground', 'assets/images/ground.png');

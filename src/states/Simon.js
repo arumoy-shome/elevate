@@ -42,15 +42,15 @@ export default class extends Phaser.State {
                     this.data.metrics.simon.score += 1;
                 }
                 else {
-                    setTimeout(() => {
-                        this.game.state.start('CandyCatch', true, false, this.data)
-                    }, ONE_SEC);
+                    this._queNextState();
                 }
             });
-            setTimeout(() => {
-                this.game.state.start('CandyCatch', true, false, this.data)
-            }, ONE_SEC);
+            this._queNextState();
         }
+    }
+
+    _queNextState() {
+            this.game.state.start('CandyCatch', true, false, this.data)
     }
 
     _startState(button) {
