@@ -20,6 +20,11 @@ export default class extends Phaser.State {
 
     create() {
         this.game.stage.backgroundColor = BACKGROUND;
+        this.sfx = {
+            right: this.game.add.audio('sfx-right'),
+            wrong: this.game.add.audio('sfx-wrong')
+        }
+
         this.levelDetails = this.game.cache.getJSON('simon');
         this.feedback = this.game.cache.getJSON('feedback');
         let button = new StartButton(this.game, this._startState, this)
@@ -120,7 +125,7 @@ export default class extends Phaser.State {
     _release(item, pointer) {
         item.alpha = .35;
         this._updatePlayerSequence(item);
-        this._flashMessage(item);
+        this._playFeedback(item);
     }
 
     _moveOff(item, pointer) {
@@ -132,16 +137,18 @@ export default class extends Phaser.State {
         this.playerSequence.push(index);
     }
 
-    _flashMessage(selected) {
+    _playFeedback(selected) {
         let index = this.playerSequence.length-1;
         if(this.simonSequence[index] === this.playerSequence[index]) {
             this.rewardMessage.setText(this.feedback.reward[_.random(2)]);
+            this.sfx.right.play();
             setTimeout(() => {
                 this.rewardMessage.setText('');
             }, 500);
         }
         else {
             this.motivateMessage.setText(this.feedback.motivate[_.random(2)]);
+            this.sfx.wrong.play();
             setTimeout(() => {
                 this.motivateMessage.setText('');
             }, 500);
