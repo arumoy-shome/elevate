@@ -4,7 +4,7 @@ Elevate is the result of 8 months of intensive work that was put
 together by my final year design team as part of our capstone design
 project. This repository contains the code for our final designed
 solution. A brief introduction to the problem spaces follows. Please
-consult the [repoort](docs/report.pdf) for more details.
+consult the [report](docs/report.pdf) for more details.
 
 ## Team members
 - Arumoy Shome: Lead Developer
